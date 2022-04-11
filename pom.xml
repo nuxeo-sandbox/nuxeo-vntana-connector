@@ -22,6 +22,7 @@
   </properties>
 
   <modules>
+    <module>nuxeo-vntana-connector-client</module>
     <module>nuxeo-vntana-connector-core</module>
     <module>nuxeo-vntana-connector-webui</module>
     <module>nuxeo-vntana-connector-package</module>
@@ -38,6 +39,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.nuxeo.labs.vntana</groupId>
+        <artifactId>nuxeo-vntana-connector-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.nuxeo.labs.vntana</groupId>
         <artifactId>nuxeo-vntana-connector-core</artifactId>
