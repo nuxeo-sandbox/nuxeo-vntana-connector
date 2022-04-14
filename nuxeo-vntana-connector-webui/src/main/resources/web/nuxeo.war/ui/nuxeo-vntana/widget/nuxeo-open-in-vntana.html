@@ -1,0 +1,28 @@
+<!--
+`nuxeo-open-in-vntana`
+@group Nuxeo UI
+@element nuxeo-open-in-vntana
+-->
+<dom-module id="nuxeo-open-in-vntana">
+    <template>
+        <style include="nuxeo-styles"></style>
+        <a href="[[_getSource(document)]]" target="_blank" rel="noreferrer noopener">Open in Vntana</a>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-open-in-vntana',
+            behaviors: [Nuxeo.LayoutBehavior],
+            properties: {
+                document: {
+                    type: Object
+                }
+            },
+
+            _getSource: function (document) {
+                return document ? `https://platform.vntana.com/${document.properties['vntana:organization_slug']}/${document.properties['vntana:client_slug']}/products/edit/${document.properties['vntana:product_uuid']}` : "";
+            }
+
+        });
+    </script>
+</dom-module>

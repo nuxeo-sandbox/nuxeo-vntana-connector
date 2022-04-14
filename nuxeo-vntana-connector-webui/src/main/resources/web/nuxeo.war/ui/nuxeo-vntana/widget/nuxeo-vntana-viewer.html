@@ -1,0 +1,43 @@
+<!--
+`nuxeo-vntana-viewer`
+@group Nuxeo UI
+@element nuxeo-vntana-viewer
+-->
+<dom-module id="nuxeo-vntana-viewer">
+    <template>
+        <style include="nuxeo-styles">
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            iframe {
+                width: 100%;
+                height: 100%;
+                border:none;
+            }
+
+        </style>
+
+        <iframe src="[[_getSource(document)]]" allow="fullscreen" ></iframe>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-vntana-viewer',
+            behaviors: [Nuxeo.LayoutBehavior],
+            properties: {
+                document: {
+                    type: Object
+                }
+            },
+
+            _getSource: function(document) {
+                return document ? `https://embed.vntana.com?organizationSlug=${document.properties['vntana:organization_slug']}&clientSlug=${document.properties['vntana:client_slug']}&productUuid=${document.properties['vntana:product_uuid']}` : "";
+            }
+
+        });
+    </script>
+</dom-module>

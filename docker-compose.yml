@@ -6,8 +6,10 @@ services:
       - "8080:8080"
       - "8787:8787"
     environment:
-      NUXEO_DEV: "true"
-      NUXEO_CLID:
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8787
+      - NUXEO_DEV=true
+      - NUXEO_PACKAGES=marketplace-disable-studio-snapshot-validation nuxeo-web-ui
+      - NUXEO_CLID=${NUXEO_CLID}
     volumes:
       - ./conf.d:/etc/nuxeo/conf.d
       - data:/var/lib/nuxeo

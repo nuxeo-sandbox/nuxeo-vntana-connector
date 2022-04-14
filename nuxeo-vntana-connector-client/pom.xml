@@ -32,9 +32,9 @@
                             <apiPackage>org.nuxeo.labs.vntana.client.api</apiPackage>
                             <modelPackage>org.nuxeo.labs.vntana.client.model</modelPackage>
                             <invokerPackage>org.nuxeo.labs.vntana.client</invokerPackage>
-                            <!--groupId>org.nuxeo.labs.vntana</groupId>
-                            <artifactId>nuxeo-vntana-connector-client</artifactId>
-                            <artifactVersion>${project.version}</artifactVersion-->
+                            <configOptions>
+                                <dateLibrary>java8</dateLibrary>
+                            </configOptions>
                         </configuration>
                     </execution>
                 </executions>
@@ -73,7 +73,6 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.9.0</version>
         </dependency>
         <dependency>
             <groupId>io.gsonfire</groupId>
@@ -94,11 +93,6 @@
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.threeten</groupId>
-            <artifactId>threetenbp</artifactId>
-            <version>1.6.0</version>
         </dependency>
     </dependencies>
 

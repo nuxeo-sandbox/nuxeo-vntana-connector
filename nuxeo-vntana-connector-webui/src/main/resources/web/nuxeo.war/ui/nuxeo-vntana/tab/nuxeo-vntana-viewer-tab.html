@@ -1,0 +1,52 @@
+<link rel="import" href="../widget/nuxeo-vntana-viewer.html">
+
+<!--
+`vntana-viewer-tab`
+@group Nuxeo UI
+@element vntana-viewer-tab
+-->
+<dom-module id="nuxeo-vntana-viewer-tab">
+    <template>
+        <style include="nuxeo-styles iron-flex iron-flex-alignment">
+            .page,
+            .content {
+                @apply --layout-vertical;
+            }
+
+            .footer-padding {
+                height: 32px;
+            }
+
+            nuxeo-vntana-viewer {
+                width: 100%;
+                height: calc(90vh - 100px);
+            }
+
+        </style>
+
+        <div class="page">
+            <div class="content">
+                <nuxeo-vntana-viewer document="[[document]]"></nuxeo-vntana-viewer>
+                <div class="footer-padding"></div>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-vntana-viewer-tab',
+            behaviors: [Nuxeo.LayoutBehavior],
+            properties: {
+                document: {
+                    type: Object,
+                },
+
+                visible: {
+                    type: Boolean
+                }
+            }
+
+        });
+    </script>
+</dom-module>

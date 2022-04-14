@@ -6,3 +6,9 @@ Bundle-Version: 1.0.0
 Bundle-Name: nuxeo-vntana-connector-core
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.nuxeo.labs.vntana.nuxeo-vntana-connector-core;singleton=true
+Nuxeo-Component: OSGI-INF/service-service.xml,
+ OSGI-INF/operation-contrib.xml,
+ OSGI-INF/type-contrib.xml,
+ OSGI-INF/adapter-contrib.xml,
+ OSGI-INF/cache-contrib.xml,
+ OSGI-INF/enricher-contrib.xml
