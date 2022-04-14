@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nuxeo.org/ecm/project/schemas/vntana">
+    <xs:element name="productuuid" type="xs:string"/>
+    <xs:element name="clientuuid" type="xs:string"/>
+    <xs:element name="organizationuuid" type="xs:string"/>
+    <xs:element name="digest" type="xs:string"/>
+    <xs:element name="date" type="xs:date"/>
+    <xs:element name="status" type="xs:string"/>
+    <xs:element name="needsRepublish" type="xs:boolean"/>
+</xs:schema>

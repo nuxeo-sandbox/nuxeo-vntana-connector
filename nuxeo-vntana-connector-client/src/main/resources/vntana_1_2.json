@@ -8,6 +8,7 @@
     "contact": {}
   },
   "host": "api-platform.vntana.com",
+  "schemes": ["https"],
   "basePath": "/",
   "tags": [{
     "name": "Operations about annotations",

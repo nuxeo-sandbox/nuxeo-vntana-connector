@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.labs.vntana.service.VntanaService">
+
+  <implementation class="org.nuxeo.labs.vntana.service.VntanaServiceImpl" />
+
+  <service>
+    <provide interface="org.nuxeo.labs.vntana.service.VntanaService" />
+  </service>
+
+</component>
