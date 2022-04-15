@@ -1,35 +1,38 @@
 package org.nuxeo.labs.vntana.automation;
 
-import org.apache.commons.lang3.StringUtils;
-import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.PathRef;
+import org.nuxeo.labs.vntana.service.VntanaService;
 
 /**
  *
  */
-@Operation(id=VntanaUnpublishModel.ID, category=Constants.CAT_DOCUMENT, label="Vnatana Unpublish Model", description="Describe here what your operation does.")
+@Operation(id=VntanaUnpublishModel.ID, category=VntanaAutomation.CAT, label="Vnatana Unpublish Model", description="Unpublish Model From Vntana")
 public class VntanaUnpublishModel {
 
-    public static final String ID = "Document.VntanaUnpublishModel";
+    public static final String ID = VntanaAutomation.CAT + ".VntanaUnpublishModel";
 
     @Context
     protected CoreSession session;
 
-    @Param(name = "path", required = false)
-    protected String path;
+    @Context
+    protected VntanaService vntanaService;
+
+    @Param(name = "save", required = false)
+    protected boolean save = false;
 
     @OperationMethod
-    public DocumentModel run() {
-        if (StringUtils.isBlank(path)) {
-            return session.getRootDocument();
-        } else {
-            return session.getDocument(new PathRef(path));
+    public DocumentModel run(DocumentModel input) {
+        input = vntanaService.unpublishModel(input);
+
+        if (save) {
+            input = session.saveDocument(input);
         }
+
+        return input;
     }
 }

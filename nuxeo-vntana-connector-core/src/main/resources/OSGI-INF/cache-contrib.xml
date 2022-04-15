@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.labs.vntana.cache">
+    <extension target="org.nuxeo.ecm.core.cache.CacheService" point="caches">
+        <cache name="vnatana_token_cache">
+            <ttl>60</ttl>
+            <option name="maxSize">100</option>
+            <option name="concurrencyLevel">500</option>
+        </cache>
+    </extension>
+</component>
+

@@ -36,18 +36,7 @@ public class TestVntanaUnpublishModel {
 
     @Test
     public void shouldCallTheOperation() throws OperationException {
-        OperationContext ctx = new OperationContext(session);
-        DocumentModel doc = (DocumentModel) automationService.run(ctx, VntanaUnpublishModel.ID);
-        assertEquals("/", doc.getPathAsString());
+        //todo
     }
 
-    @Test
-    public void shouldCallWithParameters() throws OperationException {
-        final String path = "/default-domain";
-        OperationContext ctx = new OperationContext(session);
-        Map<String, Object> params = new HashMap<>();
-        params.put("path", path);
-        DocumentModel doc = (DocumentModel) automationService.run(ctx, VntanaUnpublishModel.ID, params);
-        assertEquals(path, doc.getPathAsString());
-    }
 }
