@@ -17,7 +17,7 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 @RunWith(FeaturesRunner.class)
 @Features(VntanaTestFeature.class)
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
-public class TestVntanaUnpublishModel {
+public class TestVntanaUpdateModel {
 
     @Inject
     protected CoreSession session;

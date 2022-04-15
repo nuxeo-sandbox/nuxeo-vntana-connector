@@ -2,6 +2,7 @@ package org.nuxeo.labs.vntana.service;
 
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.labs.vntana.adapter.VntanaProductReference;
 import org.nuxeo.labs.vntana.client.ApiClient;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
@@ -45,7 +46,7 @@ public interface VntanaService {
      * @param productId
      * @return
      */
-    ProductGetResponseModel getProduct(String organizationId, String clientId, String productId);
+    ProductGetResponseModel getProduct(VntanaProductReference ref);
 
     /**
      *
@@ -77,6 +78,10 @@ public interface VntanaService {
      * @return
      */
     DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID);
+
+    DocumentModel updateModelRemoteProcessingStatus(DocumentModel doc);
+
+    DocumentModel updateModel(DocumentModel doc);
 
     DocumentModel unpublishModel(DocumentModel doc);
 

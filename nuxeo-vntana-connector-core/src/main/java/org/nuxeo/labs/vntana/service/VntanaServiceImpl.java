@@ -19,6 +19,7 @@ import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.cache.Cache;
 import org.nuxeo.ecm.core.cache.CacheService;
 import org.nuxeo.labs.vntana.adapter.VntanaAdapter;
+import org.nuxeo.labs.vntana.adapter.VntanaProductReference;
 import org.nuxeo.labs.vntana.client.ApiClient;
 import org.nuxeo.labs.vntana.client.ApiException;
 import org.nuxeo.labs.vntana.client.api.OperationsAboutClientsApi;
@@ -131,18 +132,18 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     }
 
     @Override
-    public ProductGetResponseModel getProduct(String organizationId, String clientId, String productId) {
-        String organizationToken = getOrganizationToken(organizationId);
+    public ProductGetResponseModel getProduct(VntanaProductReference productRef) {
+        String organizationToken = getOrganizationToken(productRef.getOrganizationUUID());
         try {
             ProductGetResultResponseOk response = new OperationsAboutProductsApi(getClient()).getByUuidUsingGET4(
-                    organizationToken, productId);
+                    organizationToken, productRef.getProductUUID());
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
             } else {
-                throw new NuxeoException("Could not fetch product: " + productId);
+                throw new NuxeoException("Could not fetch product: " + productRef.getProductUUID());
             }
         } catch (ApiException e) {
-            throw new NuxeoException("Could not fetch product: " + productId, e);
+            throw new NuxeoException("Could not fetch product: " + productRef.getProductUUID(), e);
         }
     }
 
@@ -205,14 +206,14 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         }
     }
 
-    public boolean upload(String organizationId, String clientId, String productId, Blob blob)
+    public boolean upload(VntanaProductReference productRef, Blob blob)
             throws ApiException, IOException {
-        String organizationToken = getOrganizationToken(organizationId);
+        String organizationToken = getOrganizationToken(productRef.getOrganizationUUID());
         String location;
 
         AdminCommonGCloudStorageProductAssetUploadSignUrlSessionRequest urlRequest = new AdminCommonGCloudStorageProductAssetUploadSignUrlSessionRequest();
-        urlRequest.setClientUuid(clientId);
-        urlRequest.setProductUuid(productId);
+        urlRequest.setClientUuid(productRef.getClientUUID());
+        urlRequest.setProductUuid(productRef.getProductUUID());
         AdminCommonGCloudStorageResourceSettingsModel resourceSettings = new AdminCommonGCloudStorageResourceSettingsModel();
         resourceSettings.setContentType(blob.getMimeType());
         resourceSettings.setOriginalName(blob.getFilename());
@@ -266,7 +267,35 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         VntanaAdapter vntanaAdapter = doc.getAdapter(VntanaAdapter.class);
         vntanaAdapter.setOrganizationUUID(organizationUUID).setClientUUID(clientUUID).setProductUUID(productId);
         try {
-            if (upload(organizationUUID, clientUUID, productId, vntanaAdapter.getOriginalBlob())) {
+            if (upload(vntanaAdapter, vntanaAdapter.getOriginalBlob())) {
+                vntanaAdapter.setUploadedStatus();
+            } else {
+                vntanaAdapter.setFailedUploadStatus();
+            }
+        } catch (IOException | ApiException e) {
+            vntanaAdapter.setFailedUploadStatus();
+        }
+        return doc;
+    }
+
+    @Override
+    public DocumentModel updateModelRemoteProcessingStatus(DocumentModel doc) {
+        VntanaAdapter adapter = doc.getAdapter(VntanaAdapter.class);
+        ProductGetResponseModel model = getProduct(adapter);
+        switch (model.getConversionStatus()) {
+            case PENDING: adapter.setUploadedStatus();break;
+            case COMPLETED: adapter.setProcessedStatus();break;
+            case NO_ASSET: adapter.setFailedUploadStatus();break;
+            default:break;
+        }
+        return doc;
+    }
+
+    @Override
+    public DocumentModel updateModel(DocumentModel doc) {
+        VntanaAdapter vntanaAdapter = doc.getAdapter(VntanaAdapter.class);
+        try {
+            if (upload(vntanaAdapter, vntanaAdapter.getOriginalBlob())) {
                 vntanaAdapter.setUploadedStatus();
             } else {
                 vntanaAdapter.setFailedUploadStatus();

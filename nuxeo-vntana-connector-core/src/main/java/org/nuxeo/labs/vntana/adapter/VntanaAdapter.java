@@ -16,7 +16,7 @@ import static org.apache.commons.codec.digest.MessageDigestAlgorithms.MD5;
 /**
  *
  */
-public class VntanaAdapter {
+public class VntanaAdapter implements VntanaProductReference {
 
     public static final String RENDITION_PREFIX = "//rendition:";
 

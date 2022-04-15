@@ -5,6 +5,8 @@
     <operation class="org.nuxeo.labs.vntana.automation.VntanaDownloadModel"/>
     <operation class="org.nuxeo.labs.vntana.automation.VntanaPublishModel"/>
     <operation class="org.nuxeo.labs.vntana.automation.VntanaUnpublishModel"/>
+    <operation class="org.nuxeo.labs.vntana.automation.VntanaUpdateModelRemoteProcessingStatus"/>
+    <operation class="org.nuxeo.labs.vntana.automation.VntanaUpdateModel"/>
   </extension>
 
 </component>

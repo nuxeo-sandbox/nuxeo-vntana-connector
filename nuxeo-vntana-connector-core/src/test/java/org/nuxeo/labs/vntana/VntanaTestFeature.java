@@ -26,6 +26,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.labs.vntana.adapter.VntanaAdapter;
+import org.nuxeo.labs.vntana.adapter.VntanaProductReference;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
@@ -70,6 +71,25 @@ public class VntanaTestFeature implements RunnerFeature {
         VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
         adapter.setOrganizationUUID(getDefaultOrg()).setClientUUID(getDefaultClient()).setProductUUID(getDefaultProduct()).setProcessedStatus();
         return session.createDocument(model);
+    }
+
+    public VntanaProductReference getDefaultProductAsRef() {
+        return new VntanaProductReference() {
+            @Override
+            public String getOrganizationUUID() {
+                return getDefaultOrg();
+            }
+
+            @Override
+            public String getClientUUID() {
+                return getDefaultClient();
+            }
+
+            @Override
+            public String getProductUUID() {
+                return getDefaultProduct();
+            }
+        };
     }
 
     public String getDefaultOrg() {

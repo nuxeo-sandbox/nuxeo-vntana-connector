@@ -63,8 +63,7 @@ public class TestVntanaService {
 
     @Test
     public void testGetProduct() {
-        ProductGetResponseModel product = vntanaservice.getProduct(vntanaTestFeature.getDefaultOrg(),
-                vntanaTestFeature.getDefaultClient(), vntanaTestFeature.getDefaultProduct());
+        ProductGetResponseModel product = vntanaservice.getProduct(vntanaTestFeature.getDefaultProductAsRef());
         Assert.assertNotNull(product);
     }
 
