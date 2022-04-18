@@ -15,7 +15,7 @@ import org.nuxeo.labs.vntana.service.VntanaService;
 @Operation(id = VntanaPublishModel.ID, category = VntanaAutomation.CAT, label = "Vnatana Publish Model", description = "Publish a 3D model to Vntana")
 public class VntanaPublishModel {
 
-    public static final String ID = VntanaAutomation.CAT + ".VntanaPublishModel";
+    public static final String ID = VntanaAutomation.CAT + ".PublishModel";
 
     @Context
     protected CoreSession session;

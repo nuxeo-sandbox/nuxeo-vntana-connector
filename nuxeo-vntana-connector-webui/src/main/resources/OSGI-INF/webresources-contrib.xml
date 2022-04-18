@@ -18,4 +18,9 @@
     </bundle>
   </extension>
 
+  <extension target="org.nuxeo.runtime.ConfigurationService" point="configuration">
+    <property name="org.nuxeo.web.ui.enrichers.document">vntana</property>
+    <property name="org.nuxeo.web.ui.vntana.enabled">${vntana.enabled:=}</property>
+  </extension>
+
 </component>

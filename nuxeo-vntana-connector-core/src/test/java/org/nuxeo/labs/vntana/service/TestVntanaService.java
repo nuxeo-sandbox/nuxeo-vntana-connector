@@ -16,6 +16,8 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.labs.vntana.VntanaTestFeature;
 import org.nuxeo.labs.vntana.adapter.VntanaAdapter;
 import org.nuxeo.labs.vntana.client.ApiClient;
+import org.nuxeo.labs.vntana.client.model.GetClientOrganizationResponseModel;
+import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.Model;
@@ -43,8 +45,8 @@ public class TestVntanaService {
     }
 
     @Test
-    public void testGetClient() {
-        ApiClient client = vntanaservice.getClient();
+    public void testGetApiClient() {
+        ApiClient client = vntanaservice.getApiClient();
         Assert.assertNotNull(client);
     }
 
@@ -55,6 +57,12 @@ public class TestVntanaService {
     }
 
     @Test
+    public void testGetOrganization() {
+        GetOrganizationByUuidResponseModel organization = vntanaservice.getOrganization(vntanaTestFeature.getDefaultOrg());
+        Assert.assertEquals(vntanaTestFeature.getDefaultOrg(),organization.getUuid());
+    }
+
+    @Test
     public void testGetClients() {
         List<GetUserClientOrganizationsResponseModel> clients = vntanaservice.getClients(
                 vntanaTestFeature.getDefaultOrg());
@@ -62,9 +70,22 @@ public class TestVntanaService {
     }
 
     @Test
+    public void testGetClient() {
+        GetClientOrganizationResponseModel client = vntanaservice.getClient(
+                vntanaTestFeature.getDefaultOrg(), vntanaTestFeature.getDefaultClient());
+        Assert.assertEquals(vntanaTestFeature.getDefaultClient(),client.getClientUuid());
+    }
+
+    @Test
     public void testGetProduct() {
         ProductGetResponseModel product = vntanaservice.getProduct(vntanaTestFeature.getDefaultProductAsRef());
         Assert.assertNotNull(product);
+    }
+
+    @Test
+    public void testDocumentIsSupported() {
+        DocumentModel model = vntanaTestFeature.getTestDocument(session);
+        Assert.assertTrue(vntanaservice.documentIsSupported(model));
     }
 
     @Test
@@ -87,8 +108,7 @@ public class TestVntanaService {
         VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
         adapter.setOrganizationUUID(vntanaTestFeature.getDefaultOrg())
                .setClientUUID(vntanaTestFeature.getDefaultClient())
-               .setProductUUID(productUUID)
-               .setProcessedStatus();
+               .setProductUUID(productUUID);
 
         model = vntanaservice.unpublishModel(model);
         Assert.assertFalse(model.hasFacet(VNTANA_FACET));

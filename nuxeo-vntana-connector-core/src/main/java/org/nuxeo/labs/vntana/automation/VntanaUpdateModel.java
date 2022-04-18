@@ -14,7 +14,7 @@ import org.nuxeo.labs.vntana.service.VntanaService;
 @Operation(id = VntanaUpdateModel.ID, category = VntanaAutomation.CAT, label = "Vnatana Update Model", description = "Update 3D model")
 public class VntanaUpdateModel {
 
-    public static final String ID = VntanaAutomation.CAT + ".VntanaUpdateModel";
+    public static final String ID = VntanaAutomation.CAT + ".UpdateModel";
 
     @Context
     protected CoreSession session;

@@ -15,7 +15,7 @@ import org.nuxeo.labs.vntana.service.VntanaService;
         label="Vnatana Update Model Remote Processing Status", description="Update Model Remote Processing Status")
 public class VntanaUpdateModelRemoteProcessingStatus {
 
-    public static final String ID = VntanaAutomation.CAT + ".VntanaUpdateModelRemoteProcessingStatus";
+    public static final String ID = VntanaAutomation.CAT + ".UpdateModelRemoteProcessingStatus";
 
     @Context
     protected CoreSession session;

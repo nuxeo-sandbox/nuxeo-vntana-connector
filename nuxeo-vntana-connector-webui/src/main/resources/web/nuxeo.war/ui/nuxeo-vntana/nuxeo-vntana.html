@@ -14,3 +14,36 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
+<link rel="import" href="./tab/nuxeo-vntana-viewer-tab.html">
+<link rel="import" href="./widget/nuxeo-open-in-vntana.html">
+
+<nuxeo-slot-content name="VntanaPublish" slot="DOCUMENT_ACTIONS">
+    <template>
+        <nuxeo-filter document="[[document]]" type="File">
+            <template>
+                <nuxeo-operation-button icon="icons:3d-rotation" label="Publish to Vntana" tooltip="Publish to Vntana" operation="Vntana.PublishModel" input="[[document]]" params="{&quot;save&quot;:true}" event="document-updated" notification="Success" error-label="Failure"></nuxeo-operation-button>
+            </template>
+        </nuxeo-filter>
+    </template>
+</nuxeo-slot-content>
+
+<nuxeo-slot-content name="VntanaViewerTab" slot="DOCUMENT_VIEWS_ITEMS" order="100">
+    <template>
+        <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]" expression="!document.properties['vntana:status'] === 'LIVE'">
+            <template>
+                <nuxeo-page-item name="vntanaviewertab" label="Vntana"></nuxeo-page-item>
+            </template>
+        </nuxeo-filter>
+    </template>
+</nuxeo-slot-content>
+
+<nuxeo-slot-content name="VntanaViewerTab" slot="DOCUMENT_VIEWS_PAGES">
+    <template>
+        <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]">
+            <template>
+                <nuxeo-vntana-viewer-tab document="[[document]]" name="vntanaviewertab"></nuxeo-vntana-viewer-tab>
+            </template>
+        </nuxeo-filter>
+    </template>
+</nuxeo-slot-content>
+

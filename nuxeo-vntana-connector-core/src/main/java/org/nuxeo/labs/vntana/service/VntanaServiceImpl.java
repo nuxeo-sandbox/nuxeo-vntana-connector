@@ -12,12 +12,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.cache.Cache;
 import org.nuxeo.ecm.core.cache.CacheService;
+import org.nuxeo.ecm.platform.actions.ActionContext;
+import org.nuxeo.ecm.platform.actions.ELActionContext;
+import org.nuxeo.ecm.platform.actions.ejb.ActionManager;
 import org.nuxeo.labs.vntana.adapter.VntanaAdapter;
 import org.nuxeo.labs.vntana.adapter.VntanaProductReference;
 import org.nuxeo.labs.vntana.client.ApiClient;
@@ -31,11 +35,15 @@ import org.nuxeo.labs.vntana.client.model.AdminCommonGCloudStorageProductAssetUp
 import org.nuxeo.labs.vntana.client.model.AdminCommonGCloudStorageResourceSettingsModel;
 import org.nuxeo.labs.vntana.client.model.AdminCommonProductCreateRequest;
 import org.nuxeo.labs.vntana.client.model.AdminCommonProductDeleteRequest;
+import org.nuxeo.labs.vntana.client.model.ClientGetResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.ClientOrganizationResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.GCloudStorageResourceCreateSignUrlSessionResponseOk;
+import org.nuxeo.labs.vntana.client.model.GetClientOrganizationResponseModel;
+import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.Model;
+import org.nuxeo.labs.vntana.client.model.OrganizationGetResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.PipelinesGetPipelinesResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.ProductCreateResponseModel;
 import org.nuxeo.labs.vntana.client.model.ProductCreateResultResponseOk;
@@ -51,10 +59,11 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.nuxeo.runtime.services.config.ConfigurationService;
 
 public class VntanaServiceImpl extends DefaultComponent implements VntanaService {
 
-    public static final String VNTANA_API_TOKEN = "vntana.api.token";
+    public static final String VNTANA_API_TOKEN = "vntana.api.key";
 
     public static final String VNTANA_DEFAULT_ORGANIZATION_UUID = "vntana.api.default.organization";
 
@@ -66,12 +75,14 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
 
     public static final String VNTANA_TOKEN_CACHE_NAME = "vnatana_token_cache";
 
+    public static final String VNTANA_DOCUMENT_FILTER_ID = "vntanaDocumentFilter";
+
     /**
      * volatile on purpose to allow for the double-checked locking idiom
      */
     protected volatile ApiClient client;
 
-    public ApiClient getClient() {
+    public ApiClient getApiClient() {
         // thread safe lazy initialization of the google vision client
         // see https://en.wikipedia.org/wiki/Double-checked_locking
         ApiClient result = client;
@@ -94,7 +105,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     }
 
     @Override
-    public void setClient(ApiClient client) {
+    public void setApiClient(ApiClient client) {
         this.client = client;
     }
 
@@ -103,7 +114,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         String apiToken = getApiToken();
         try {
             UserOrganizationResultResponseOk response = new OperationsAboutOrganizationsApi(
-                    getClient()).getUserOrganizationsUsingGET(apiToken);
+                    getApiClient()).getUserOrganizationsUsingGET(apiToken);
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse().getGrid();
             } else {
@@ -115,11 +126,27 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     }
 
     @Override
+    public GetOrganizationByUuidResponseModel getOrganization(String organizationUUID) {
+        String organizationToken = getOrganizationToken(organizationUUID);
+        try {
+            OrganizationGetResultResponseOk response = new OperationsAboutOrganizationsApi(
+                    getApiClient()).getCurrentOrganizationUsingGET(organizationToken);
+            if (Boolean.TRUE.equals(response.getSuccess())) {
+                return response.getResponse();
+            } else {
+                throw new NuxeoException("Could not get organization " + organizationUUID);
+            }
+        } catch (ApiException e) {
+            throw new NuxeoException("Could not get organization " + organizationUUID, e);
+        }
+    }
+
+    @Override
     public List<GetUserClientOrganizationsResponseModel> getClients(String organizationID) {
         try {
             String organizationToken = getOrganizationToken(organizationID);
             ClientOrganizationResultResponseOk response = new OperationsAboutClientsApi(
-                    getClient()).getClientOrganizationsUsingGET(organizationToken);
+                    getApiClient()).getClientOrganizationsUsingGET(organizationToken);
 
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse().getGrid();
@@ -132,10 +159,27 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     }
 
     @Override
+    public GetClientOrganizationResponseModel getClient(String organizationUUID, String clientUUID) {
+        try {
+            String organizationToken = getOrganizationToken(organizationUUID);
+            ClientGetResultResponseOk response = new OperationsAboutClientsApi(
+                    getApiClient()).getByUuidUsingGET(organizationToken,clientUUID);
+
+            if (Boolean.TRUE.equals(response.getSuccess())) {
+                return response.getResponse();
+            } else {
+                throw new NuxeoException("Could not get client "+clientUUID);
+            }
+        } catch (ApiException e) {
+            throw new NuxeoException("Could not get client "+clientUUID, e);
+        }
+    }
+
+    @Override
     public ProductGetResponseModel getProduct(VntanaProductReference productRef) {
         String organizationToken = getOrganizationToken(productRef.getOrganizationUUID());
         try {
-            ProductGetResultResponseOk response = new OperationsAboutProductsApi(getClient()).getByUuidUsingGET4(
+            ProductGetResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).getByUuidUsingGET4(
                     organizationToken, productRef.getProductUUID());
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
@@ -152,7 +196,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         String organizationToken = getOrganizationToken(organizationId);
         try {
             PipelinesGetPipelinesResultResponseOk response = new OperationsAboutPipelinesApi(
-                    getClient()).getPipelinesUsingGET(organizationToken);
+                    getApiClient()).getPipelinesUsingGET(organizationToken);
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse().getPipelines();
             } else {
@@ -194,7 +238,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
 
         try {
             String organizationToken = getOrganizationToken(organizationUUID);
-            ProductCreateResultResponseOk response = new OperationsAboutProductsApi(getClient()).createUsingPOST5(
+            ProductCreateResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).createUsingPOST5(
                     organizationToken, productCreateRequest);
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
@@ -206,8 +250,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         }
     }
 
-    public boolean upload(VntanaProductReference productRef, Blob blob)
-            throws ApiException, IOException {
+    public boolean upload(VntanaProductReference productRef, Blob blob) throws ApiException, IOException {
         String organizationToken = getOrganizationToken(productRef.getOrganizationUUID());
         String location;
 
@@ -220,10 +263,10 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         resourceSettings.setOriginalSize(blob.getLength());
         urlRequest.setResourceSettings(resourceSettings);
         GCloudStorageResourceCreateSignUrlSessionResponseOk urlResponse = new OperationsAboutFilesUploadApi(
-                getClient()).createClientProductAssetUploadSignUrlSessionUsingPOST(organizationToken, urlRequest);
+                getApiClient()).createClientProductAssetUploadSignUrlSessionUsingPOST(organizationToken, urlRequest);
         location = urlResponse.getResponse().getLocation();
 
-        ApiClient client = getClient();
+        ApiClient client = getApiClient();
         Request uploadRequest = new Request.Builder().url(location)
                                                      .header(X_AUTH_TOKEN, organizationToken)
                                                      .put(RequestBody.create(blob.getFile(),
@@ -237,7 +280,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         productDeleteRequest.addUuidsItem(productUUID);
         try {
             String organizationToken = getOrganizationToken(organizationUUID);
-            ProductDeleteResultResponseOk response = new OperationsAboutProductsApi(getClient()).deleteUsingDELETE4(
+            ProductDeleteResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).deleteUsingDELETE4(
                     organizationToken, productDeleteRequest);
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
@@ -250,6 +293,14 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     }
 
     @Override
+    public boolean documentIsSupported(DocumentModel doc) {
+        ActionManager actionService = Framework.getService(ActionManager.class);
+        ActionContext actionContext = new ELActionContext();
+        actionContext.setCurrentDocument(doc);
+        return actionService.checkFilter(VNTANA_DOCUMENT_FILTER_ID, actionContext);
+    }
+
+    @Override
     public DocumentModel publishModel(DocumentModel doc) {
         return publishModel(doc, Framework.getProperty(VNTANA_DEFAULT_ORGANIZATION_UUID),
                 Framework.getProperty(VNTANA_DEFAULT_CLIENT_UUID));
@@ -257,23 +308,28 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
 
     @Override
     public DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID) {
+        if (!doc.hasFacet(VNTANA_FACET)) {
+            doc.addFacet(VNTANA_FACET);
+        }
+        GetOrganizationByUuidResponseModel organization = getOrganization(organizationUUID);
+        GetClientOrganizationResponseModel client = getClient(organizationUUID,clientUUID);
         String pipelineUUID = getPipelineUUID(organizationUUID, "Convert Only");
         ProductCreateResponseModel product = createProduct((String) doc.getPropertyValue("dc:title"), organizationUUID,
                 clientUUID, pipelineUUID);
         String productId = product.getUuid();
-        if (!doc.hasFacet(VNTANA_FACET)) {
-            doc.addFacet(VNTANA_FACET);
-        }
         VntanaAdapter vntanaAdapter = doc.getAdapter(VntanaAdapter.class);
-        vntanaAdapter.setOrganizationUUID(organizationUUID).setClientUUID(clientUUID).setProductUUID(productId);
+        vntanaAdapter.setOrganizationUUID(organizationUUID).setOrganizationSlug(organization.getSlug()).
+                setClientUUID(clientUUID).setClientSlug(client.getClientSlug()).setProductUUID(productId);
         try {
-            if (upload(vntanaAdapter, vntanaAdapter.getOriginalBlob())) {
-                vntanaAdapter.setUploadedStatus();
+            Blob blob = vntanaAdapter.getOriginalBlob();
+            if (upload(vntanaAdapter, blob)) {
+                vntanaAdapter.setSourceDigest(blob.getDigest()).setUploadSuccessful();
+                return updateModelRemoteProcessingStatus(doc);
             } else {
-                vntanaAdapter.setFailedUploadStatus();
+                vntanaAdapter.setUploadFailed();
             }
         } catch (IOException | ApiException e) {
-            vntanaAdapter.setFailedUploadStatus();
+            vntanaAdapter.setUploadFailed();
         }
         return doc;
     }
@@ -282,26 +338,25 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public DocumentModel updateModelRemoteProcessingStatus(DocumentModel doc) {
         VntanaAdapter adapter = doc.getAdapter(VntanaAdapter.class);
         ProductGetResponseModel model = getProduct(adapter);
-        switch (model.getConversionStatus()) {
-            case PENDING: adapter.setUploadedStatus();break;
-            case COMPLETED: adapter.setProcessedStatus();break;
-            case NO_ASSET: adapter.setFailedUploadStatus();break;
-            default:break;
-        }
+        adapter.setStatus(model.getStatus().getValue());
+        adapter.setConversionStatus(model.getConversionStatus().getValue());
         return doc;
     }
 
     @Override
     public DocumentModel updateModel(DocumentModel doc) {
         VntanaAdapter vntanaAdapter = doc.getAdapter(VntanaAdapter.class);
+        Blob blob = vntanaAdapter.getOriginalBlob();
+        if (blob.getDigest().equals(vntanaAdapter.getSourceDigest()) && vntanaAdapter.isUploaded()) {
+            return doc;
+        }
         try {
-            if (upload(vntanaAdapter, vntanaAdapter.getOriginalBlob())) {
-                vntanaAdapter.setUploadedStatus();
-            } else {
-                vntanaAdapter.setFailedUploadStatus();
+            if (upload(vntanaAdapter, blob)) {
+                vntanaAdapter.setSourceDigest(blob.getDigest()).setUploadSuccessful();
+                return updateModelRemoteProcessingStatus(doc);
             }
         } catch (IOException | ApiException e) {
-            vntanaAdapter.setFailedUploadStatus();
+            vntanaAdapter.setUploadFailed();
         }
         return doc;
     }
@@ -323,8 +378,8 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
                 organizationToken, adapter.getClientUUID(), format.getValue(), adapter.getProductUUID(), null)
                                                                  .execute()) {
             if (response.isSuccessful()) {
-                File file = getClient().downloadFileFromResponse(response);
-                Blob blob = new FileBlob(file,response.headers().get("content-type"));
+                File file = getApiClient().downloadFileFromResponse(response);
+                Blob blob = new FileBlob(file, response.headers().get("content-type"));
                 return blob;
             } else {
                 throw new NuxeoException("Failed to download");
@@ -336,6 +391,9 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
 
     protected String getApiToken() {
         String apiKey = Framework.getProperty(VNTANA_API_TOKEN);
+        if (StringUtils.isBlank(apiKey)) {
+            throw new NuxeoException("Vntana API key is not set");
+        }
         String apiToken = getTokenFromCache(apiKey);
         if (apiToken != null) {
             return apiToken;
@@ -345,7 +403,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
                                                    .post(RequestBody.create(String.format(
                                                            "{\n\"personal-access-token\": \"%s\"\n}", apiKey), JSON))
                                                    .build();
-            Response response = getClient().getHttpClient().newCall(request).execute();
+            Response response = getApiClient().getHttpClient().newCall(request).execute();
             if (response.isSuccessful()) {
                 apiToken = "Bearer " + response.header(X_AUTH_TOKEN);
                 putTokenInCache(apiKey, apiToken);
@@ -367,7 +425,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         String apiToken = getApiToken();
 
         try {
-            ApiClient client = getClient();
+            ApiClient client = getApiClient();
             Request request = new Request.Builder().url("https://api-platform.vntana.com/v1/auth/refresh-token")
                                                    .header(X_AUTH_TOKEN, apiToken)
                                                    .header("organizationUuid", organizationId)

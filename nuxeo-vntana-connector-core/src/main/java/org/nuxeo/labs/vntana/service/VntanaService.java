@@ -4,6 +4,8 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.labs.vntana.adapter.VntanaProductReference;
 import org.nuxeo.labs.vntana.client.ApiClient;
+import org.nuxeo.labs.vntana.client.model.GetClientOrganizationResponseModel;
+import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.Model;
@@ -19,13 +21,13 @@ public interface VntanaService {
      *
      * @return the API client object
      */
-    ApiClient getClient();
+    ApiClient getApiClient();
 
     /**
      *
      * @param client
      */
-    void setClient(ApiClient client);
+    void setApiClient(ApiClient client);
 
     /**
      *
@@ -33,19 +35,16 @@ public interface VntanaService {
      */
     List<GetUserOrganizationsResponseModel> getOrganizations();
 
+    GetOrganizationByUuidResponseModel getOrganization(String organizationUUID);
+
     /**
      *
      * @return
      */
     List<GetUserClientOrganizationsResponseModel> getClients(String organizationID);
 
-    /**
-     *
-     * @param organizationId
-     * @param clientId
-     * @param productId
-     * @return
-     */
+    GetClientOrganizationResponseModel getClient(String organizationUUID, String ClientUUID);
+
     ProductGetResponseModel getProduct(VntanaProductReference ref);
 
     /**
@@ -64,12 +63,14 @@ public interface VntanaService {
 
     ProductCreateResponseModel createProduct(String name, String organizationUUID, String clientUUID, String pipelineUUID);
 
+
+    boolean documentIsSupported(DocumentModel doc);
+
     /**
      * @param doc
      * @return
      */
     DocumentModel publishModel(DocumentModel doc);
-
 
     /**
      * @param doc

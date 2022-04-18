@@ -14,7 +14,7 @@ import org.nuxeo.labs.vntana.service.VntanaService;
 @Operation(id=VntanaUnpublishModel.ID, category=VntanaAutomation.CAT, label="Vnatana Unpublish Model", description="Unpublish Model From Vntana")
 public class VntanaUnpublishModel {
 
-    public static final String ID = VntanaAutomation.CAT + ".VntanaUnpublishModel";
+    public static final String ID = VntanaAutomation.CAT + ".UnpublishModel";
 
     @Context
     protected CoreSession session;

@@ -15,7 +15,7 @@ import org.nuxeo.labs.vntana.service.VntanaService;
 @Operation(id = VntanaDownloadModel.ID, category = VntanaAutomation.CAT, label = "Vntana Download Model", description = "Download a 3D model from Vntana")
 public class VntanaDownloadModel {
 
-    public static final String ID = VntanaAutomation.CAT + ".VntanaDownloadModel";
+    public static final String ID = VntanaAutomation.CAT + ".DownloadModel";
 
     @Context
     protected VntanaService vntanaService;

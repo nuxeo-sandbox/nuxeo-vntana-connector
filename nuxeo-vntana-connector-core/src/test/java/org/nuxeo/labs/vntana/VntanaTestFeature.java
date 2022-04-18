@@ -43,7 +43,8 @@ import static org.nuxeo.labs.vntana.service.VntanaServiceImpl.VNTANA_DEFAULT_ORG
 @Features({AutomationFeature.class })
 @Deploy({
         "org.nuxeo.labs.vntana.nuxeo-vntana-connector-core",
-        "org.nuxeo.ecm.platform.rendition.api"
+        "org.nuxeo.ecm.platform.rendition.api",
+        "org.nuxeo.ecm.actions"
 })
 public class VntanaTestFeature implements RunnerFeature {
 
@@ -69,7 +70,7 @@ public class VntanaTestFeature implements RunnerFeature {
         model.setPropertyValue("file:content", (Serializable) glbBlob);
         model.addFacet(VNTANA_FACET);
         VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
-        adapter.setOrganizationUUID(getDefaultOrg()).setClientUUID(getDefaultClient()).setProductUUID(getDefaultProduct()).setProcessedStatus();
+        adapter.setOrganizationUUID(getDefaultOrg()).setClientUUID(getDefaultClient()).setProductUUID(getDefaultProduct());
         return session.createDocument(model);
     }
 

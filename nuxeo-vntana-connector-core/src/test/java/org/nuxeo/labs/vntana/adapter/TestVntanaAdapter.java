@@ -27,8 +27,12 @@ public class TestVntanaAdapter {
         Assert.assertNotNull(adapter);
         adapter.setOrganizationUUID("orgUUID");
         Assert.assertEquals("orgUUID",adapter.getOrganizationUUID());
+        adapter.setOrganizationSlug("orgSlug");
+        Assert.assertEquals("orgSlug",adapter.getOrganizationSlug());
         adapter.setClientUUID("clientUUID");
         Assert.assertEquals("clientUUID",adapter.getClientUUID());
+        adapter.setClientSlug("clientSlug");
+        Assert.assertEquals("clientSlug",adapter.getClientSlug());
         adapter.setProductUUID("productUUID");
         Assert.assertEquals("productUUID",adapter.getProductUUID());
         adapter.setStatus("status");
