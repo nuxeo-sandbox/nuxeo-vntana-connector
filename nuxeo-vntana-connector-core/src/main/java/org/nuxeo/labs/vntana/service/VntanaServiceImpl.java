@@ -43,6 +43,7 @@ import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.Model;
+import org.nuxeo.labs.vntana.client.model.ModelOpsParameters;
 import org.nuxeo.labs.vntana.client.model.OrganizationGetResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.PipelinesGetPipelinesResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.ProductCreateResponseModel;
@@ -67,6 +68,8 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public static final String VNTANA_DEFAULT_ORGANIZATION_UUID = "vntana.api.default.organization";
 
     public static final String VNTANA_DEFAULT_CLIENT_UUID = "vntana.api.default.client";
+
+    public static final String VNTANA_DEFAULT_PUBLISH_LIVE = "vntana.api.default.publish.live";
 
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
@@ -106,6 +109,17 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     @Override
     public void setApiClient(ApiClient client) {
         this.client = client;
+    }
+
+    @Override
+    public ModelOpsParameters getDefaultModelOpsParameters() {
+        return new ModelOpsParameters()
+                .setDracoCompression(true)
+                .setOptimizationDesiredOuput("AUTO")
+                .setOptimizationObstructedGeometry(false)
+                .setTextureLosslessCompression(false)
+                .setTextureAgression(4)
+                .setTextureMaxDimension(4096);
     }
 
     @Override
@@ -221,19 +235,15 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
 
     @Override
     public ProductCreateResponseModel createProduct(String name, String organizationUUID, String clientUUID,
-            String pipelineUUID) {
+                                                    String pipelineUUID, ModelOpsParameters parameters,
+                                                    Map<String,String> attributes) {
         AdminCommonProductCreateRequest productCreateRequest = new AdminCommonProductCreateRequest();
         productCreateRequest.setClientUuid(clientUUID);
         productCreateRequest.setName(name);
         productCreateRequest.setAutoPublish(false);
         productCreateRequest.setPipelineUuid(pipelineUUID);
-
-        Map<String, String> compression = new HashMap<>();
-        compression.put("enabled", "true");
-        Map<String, Map<String, String>> modelOpsParameters = new HashMap<>();
-        modelOpsParameters.put("DRACO_COMPRESSION", compression);
-
-        productCreateRequest.setModelOpsParameters(modelOpsParameters);
+        productCreateRequest.setModelOpsParameters(parameters.toMap());
+        productCreateRequest.setAttributes(attributes);
 
         try {
             String organizationToken = getOrganizationToken(organizationUUID);
@@ -303,20 +313,28 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
 
     @Override
     public DocumentModel publishModel(DocumentModel doc) {
-        return publishModel(doc, Framework.getProperty(VNTANA_DEFAULT_ORGANIZATION_UUID),
-                Framework.getProperty(VNTANA_DEFAULT_CLIENT_UUID));
+        return publishModel(doc,
+                Framework.getProperty(VNTANA_DEFAULT_ORGANIZATION_UUID),
+                Framework.getProperty(VNTANA_DEFAULT_CLIENT_UUID),
+                Boolean.getBoolean(Framework.getProperty(VNTANA_DEFAULT_PUBLISH_LIVE,"false")),
+                getDefaultModelOpsParameters());
     }
 
     @Override
-    public DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID) {
+    public DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID, boolean autoLive, ModelOpsParameters parameters) {
         if (!doc.hasFacet(VNTANA_FACET)) {
             doc.addFacet(VNTANA_FACET);
         }
         GetOrganizationByUuidResponseModel organization = getOrganization(organizationUUID);
         GetClientOrganizationResponseModel client = getClient(organizationUUID, clientUUID);
         String pipelineUUID = getPipelineUUID(organizationUUID, "Convert Only");
-        ProductCreateResponseModel product = createProduct((String) doc.getPropertyValue("dc:title"), organizationUUID,
-                clientUUID, pipelineUUID);
+
+        Map<String,String> attributes = new HashMap<>();
+        attributes.put("NuxeoUuid",doc.getId());
+
+        ProductCreateResponseModel product = createProduct(
+                (String) doc.getPropertyValue("dc:title"), organizationUUID,
+                clientUUID, pipelineUUID, parameters != null ? parameters : getDefaultModelOpsParameters(), attributes);
         String productId = product.getUuid();
         VntanaAdapter vntanaAdapter = doc.getAdapter(VntanaAdapter.class);
         vntanaAdapter.setOrganizationUUID(organizationUUID)

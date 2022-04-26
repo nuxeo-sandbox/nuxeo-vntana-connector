@@ -3,6 +3,7 @@ package org.nuxeo.labs.vntana.service;
 import static org.junit.Assert.assertNotNull;
 import static org.nuxeo.labs.vntana.adapter.VntanaAdapter.VNTANA_FACET;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,6 +22,7 @@ import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.Model;
+import org.nuxeo.labs.vntana.client.model.ModelOpsParameters;
 import org.nuxeo.labs.vntana.client.model.ProductGetResponseModel;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -100,8 +102,11 @@ public class TestVntanaService {
     @Test
     public void testUnpublishModel() {
         String pipelineUUID = vntanaservice.getPipelineUUID(vntanaTestFeature.getDefaultOrg(), "Convert Only");
-        String productUUID = vntanaservice.createProduct("TestDelete", vntanaTestFeature.getDefaultOrg(),
-                vntanaTestFeature.getDefaultClient(), pipelineUUID).getUuid();
+        String productUUID = vntanaservice.createProduct(
+                "TestDelete", vntanaTestFeature.getDefaultOrg(),
+                vntanaTestFeature.getDefaultClient(), pipelineUUID,
+                new ModelOpsParameters(), new HashMap<>()
+        ).getUuid();
 
         DocumentModel model = vntanaTestFeature.getTestDocument(session);
         model.addFacet(VNTANA_FACET);

@@ -12,6 +12,7 @@ import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.Model;
+import org.nuxeo.labs.vntana.client.model.ModelOpsParameters;
 import org.nuxeo.labs.vntana.client.model.ProductCreateResponseModel;
 import org.nuxeo.labs.vntana.client.model.ProductGetResponseModel;
 
@@ -26,6 +27,9 @@ public interface VntanaService {
      * @param client
      */
     void setApiClient(ApiClient client);
+
+
+    ModelOpsParameters getDefaultModelOpsParameters();
 
     /**
      * @return
@@ -56,14 +60,10 @@ public interface VntanaService {
     String getPipelineUUID(String organizationId, String name);
 
     ProductCreateResponseModel createProduct(String name, String organizationUUID, String clientUUID,
-            String pipelineUUID);
+            String pipelineUUID, ModelOpsParameters parameters, Map<String,String> attributes );
 
     boolean documentIsSupported(DocumentModel doc);
 
-    /**
-     * @param doc
-     * @return
-     */
     DocumentModel publishModel(DocumentModel doc);
 
     /**
@@ -72,7 +72,7 @@ public interface VntanaService {
      * @param clientUUID
      * @return
      */
-    DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID);
+    DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID, boolean autoLive, ModelOpsParameters parameters);
 
     DocumentModel updateModelRemoteProcessingStatus(DocumentModel doc);
 

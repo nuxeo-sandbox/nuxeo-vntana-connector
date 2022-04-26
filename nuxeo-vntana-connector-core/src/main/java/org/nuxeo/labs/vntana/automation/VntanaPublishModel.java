@@ -29,13 +29,16 @@ public class VntanaPublishModel {
     @Param(name = "clientUUID", required = false)
     protected String clientUUID;
 
+    @Param(name = "autoPublish", required = false)
+    protected boolean autoPublish = false;
+
     @Param(name = "save", required = false)
     protected boolean save = false;
 
     @OperationMethod
     public DocumentModel run(DocumentModel input) {
         if (!StringUtils.isBlank(organizationUUID) && !StringUtils.isBlank(clientUUID)) {
-            input = vntanaService.publishModel(input, organizationUUID, clientUUID);
+            input = vntanaService.publishModel(input, organizationUUID, clientUUID, autoPublish, null);
         } else {
             input = vntanaService.publishModel(input);
         }
