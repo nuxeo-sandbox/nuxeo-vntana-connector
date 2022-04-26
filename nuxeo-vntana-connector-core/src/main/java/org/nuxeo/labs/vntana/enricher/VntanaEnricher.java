@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.io.marshallers.json.enrichers.AbstractJsonEnricher;
+import org.nuxeo.ecm.core.io.registry.context.RenderingContext;
 import org.nuxeo.ecm.core.io.registry.reflect.Setup;
 import org.nuxeo.labs.vntana.service.VntanaService;
 import org.nuxeo.runtime.api.Framework;
@@ -45,10 +46,15 @@ public class VntanaEnricher extends AbstractJsonEnricher<DocumentModel> {
         // CoreSession session = wrapper.getSession();
         // ...
         // }
-        VntanaService service = Framework.getService(VntanaService.class);
-        jg.writeFieldName(NAME);
-        jg.writeStartObject();
-        jg.writeBooleanField("isSupported", service.documentIsSupported(obj));
-        jg.writeEndObject();
+        try (RenderingContext.SessionWrapper wrapper = ctx.getSession(obj)) {
+            if (!wrapper.getSession().exists(obj.getRef())) {
+                return;
+            }
+            VntanaService service = Framework.getService(VntanaService.class);
+            jg.writeFieldName(NAME);
+            jg.writeStartObject();
+            jg.writeBooleanField("isSupported", service.documentIsSupported(obj));
+            jg.writeEndObject();
+        }
     }
 }
