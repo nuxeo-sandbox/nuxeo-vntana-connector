@@ -17,7 +17,7 @@ limitations under the License.
 <link rel="import" href="./tab/nuxeo-vntana-viewer-tab.html">
 <link rel="import" href="./widget/nuxeo-open-in-vntana.html">
 
-<nuxeo-slot-content name="VntanaPublish" slot="DOCUMENT_ACTIONS">
+<nuxeo-slot-content name="VntanaPublish" slot="DOCUMENT_ACTIONS" order="120">
     <template>
         <nuxeo-filter document="[[document]]" expression="Nuxeo.UI.config.vntana.enabled === 'true' && !document.facets.includes('Vntana') && document.contextParameters.vntana.isSupported">
             <template>
@@ -30,7 +30,7 @@ limitations under the License.
     </template>
 </nuxeo-slot-content>
 
-<nuxeo-slot-content name="VntanaUpdateModelStatus" slot="DOCUMENT_ACTIONS">
+<nuxeo-slot-content name="VntanaUpdateModelStatus" slot="DOCUMENT_ACTIONS" order="120">
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]" expression="Nuxeo.UI.config.vntana.enabled === 'true'">
             <template>
@@ -43,7 +43,7 @@ limitations under the License.
     </template>
 </nuxeo-slot-content>
 
-<nuxeo-slot-content name="VntanaUpdateModel" slot="DOCUMENT_ACTIONS">
+<nuxeo-slot-content name="VntanaUpdateModel" slot="DOCUMENT_ACTIONS" order="121">
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]" expression="Nuxeo.UI.config.vntana.enabled === 'true'">
             <template>
@@ -56,7 +56,7 @@ limitations under the License.
     </template>
 </nuxeo-slot-content>
 
-<nuxeo-slot-content name="VntanaUnpublishModel" slot="DOCUMENT_ACTIONS">
+<nuxeo-slot-content name="VntanaUnpublishModel" slot="DOCUMENT_ACTIONS" order="122">
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]" expression="Nuxeo.UI.config.vntana.enabled === 'true'">
             <template>
@@ -69,7 +69,7 @@ limitations under the License.
     </template>
 </nuxeo-slot-content>
 
-<nuxeo-slot-content name="VntanaViewerTab" slot="DOCUMENT_VIEWS_ITEMS" order="100">
+<nuxeo-slot-content name="VntanaViewerTab" slot="DOCUMENT_VIEWS_ITEMS" order="120">
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" user="[[user]]"
                       expression="Nuxeo.UI.config.vntana.enabled === 'true' && document.properties['vntana:status'] === 'LIVE'">
