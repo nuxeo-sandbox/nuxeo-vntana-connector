@@ -125,6 +125,7 @@ public class TestVntanaService {
         Blob blob = vntanaservice.download(model, Model.ConversionFormatEnum.GLB);
         Assert.assertNotNull(blob);
         Assert.assertEquals("model/gltf-binary",blob.getMimeType());
+        Assert.assertEquals("box.glb",blob.getFilename());
         Assert.assertTrue(blob.getLength() > 0);
     }
 

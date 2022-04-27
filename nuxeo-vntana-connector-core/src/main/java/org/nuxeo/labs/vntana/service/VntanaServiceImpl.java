@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
@@ -405,7 +407,21 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
                                                                  .execute()) {
             if (response.isSuccessful()) {
                 File file = getApiClient().downloadFileFromResponse(response);
-                return new FileBlob(file, response.headers().get("content-type"));
+
+                String contentDisposition = response.header("Content-Disposition");
+                String filename = null;
+                if (StringUtils.isNotBlank(contentDisposition)) {
+                    Pattern pattern = Pattern.compile("filename=['\"]?([^'\";]+)['\"]?");
+                    Matcher matcher = pattern.matcher(contentDisposition);
+                    if (matcher.find()) {
+                        filename = getApiClient().sanitizeFilename(matcher.group(1));
+                    }
+                }
+                Blob blob = new FileBlob(file, response.headers().get("content-type"));
+                if (StringUtils.isNotBlank(filename)) {
+                    blob.setFilename(filename);
+                }
+                return blob;
             } else {
                 throw new NuxeoException("Failed to download");
             }
