@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.CloseableFile;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.NuxeoException;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
@@ -278,13 +279,15 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         location = urlResponse.getResponse().getLocation();
 
         ApiClient client = getApiClient();
-        Request uploadRequest = new Request.Builder().url(location)
-                                                     .header(X_AUTH_TOKEN, organizationToken)
-                                                     .put(RequestBody.create(blob.getFile(),
-                                                             MediaType.get(blob.getMimeType())))
-                                                     .build();
-        try (Response response = client.getHttpClient().newCall(uploadRequest).execute()) {
-            return response.isSuccessful();
+        try (CloseableFile cfile = blob.getCloseableFile()) {
+            Request uploadRequest = new Request.Builder().url(location)
+                    .header(X_AUTH_TOKEN, organizationToken)
+                    .put(RequestBody.create(cfile.getFile(),
+                            MediaType.get(blob.getMimeType())))
+                    .build();
+            try (Response response = client.getHttpClient().newCall(uploadRequest).execute()) {
+                return response.isSuccessful();
+            }
         }
     }
 
