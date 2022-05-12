@@ -1,0 +1,48 @@
+<!--
+`vntana-info-view`
+@group Nuxeo UI
+@element vntana-info-view
+-->
+
+<link rel="import" href="nuxeo-open-in-vntana.html">
+
+<dom-module id="vntana-info-view">
+    <template>
+        <style include="nuxeo-styles"></style>
+
+        <template is="dom-if" if="[[_display(document)]]" restamp>
+            <h5>Vntana</h5>
+
+            <div role="widget">
+                <label>[[i18n('label.vntana.status')]]</label>
+                <div name="vntana:status">[[document.properties.vntana:status]]</div>
+            </div>
+
+            <div role="widget">
+                <label>[[i18n('label.vntana.conversion_status')]]</label>
+                <div name="vntana:conversion_status">[[document.properties.vntana:conversion_status]]</div>
+            </div>
+
+            <nuxeo-open-in-vntana document="[[document]]"></nuxeo-open-in-vntana>
+
+        </template>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'vntana-info-view',
+            behaviors: [Nuxeo.LayoutBehavior],
+            properties: {
+
+                document: {
+                    type: Object
+                }
+            },
+
+            _display:function(document) {
+                return document && this.hasFacet(document,'Vntana') && Nuxeo.UI.config.vntana.enabled === 'true';
+            }
+
+        });
+    </script>
+</dom-module>

@@ -1,3 +1,18 @@
 {
-  "vntana":"Vntana"
+  "vntana":"Vntana",
+  "label.vntana.embedded":"Vntana",
+  "label.vntana.status":"Product Status",
+  "label.vntana.conversion_status":"Conversion Status",
+  "vntana.action.publish": "Publish To Vntana",
+  "vntana.action.publish.success": "Model Successfully Published to Vntana",
+  "vntana.action.publish.failure": "Failed to Publish to Vntana",
+  "vntana.action.republish": "Republish To Vntana",
+  "vntana.action.republish.success": "Model Successfully Republished to Vntana",
+  "vntana.action.republish.failure": "Failed to Republish to Vntana",
+  "vntana.action.unpublish": "Unpublish From Vntana",
+  "vntana.action.unpublish.success": "Model Successfully Unpublished from Vntana",
+  "vntana.action.unpublish.failure": "Failed to Unpublish from Vntana",
+  "vntana.action.update.status": "Refresh Vntana Status",
+  "vntana.action.update.status.success": "Model Status Successfully Refreshed",
+  "vntana.action.update.status.failure": "Failed to Refresh the Model Status"
 }

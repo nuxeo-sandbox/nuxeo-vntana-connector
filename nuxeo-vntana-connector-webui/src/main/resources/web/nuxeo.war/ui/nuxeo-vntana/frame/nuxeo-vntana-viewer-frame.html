@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Vntana Viewer</title>
+    <script src="https://static.vntana.com/js/vnview.min.js?version=2.0"></script>
+</head>
+
+<style>
+    html, body {
+        margin: 0px;
+        height: 100%;
+    }
+
+    #viewer {
+        width: 100%;
+        height: 100%;
+    }
+
+    model-viewer {
+        width: 100%;
+        height: 100%;
+        background-color: white;
+    }
+
+    #enterFullscreen {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        width: 40px;
+        height: 40px;
+        background: white url('https://storage.googleapis.com/vntana-viewer/assets/images/enter_fullscreen_icon.svg') no-repeat center;
+        background-size: 25px auto;
+        cursor: pointer;
+    }
+
+    #exitFullscreen {
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        width: 40px;
+        height: 40px;
+        background: white url('https://storage.googleapis.com/vntana-viewer/assets/images/exit_fullscreen_icon.svg') no-repeat center;
+        background-size: 25px auto;
+        display: none;
+        cursor: pointer;
+    }
+
+</style>
+
+<body>
+<div id="viewer"></div>
+</body>
+
+
+<script>
+    window.addEventListener("load", function () {
+        const params = new URLSearchParams(window.location.search);
+
+        let blobUrl = params.get('blobUrl');
+        let thumbnailUrl = params.get('thumbnailUrl');
+
+        let viewerEl = document.querySelector('#viewer');
+
+        let viewer = vnview.createvnviewer(viewerEl, {
+            thumbnailUrl: thumbnailUrl,
+            disablePoster: false
+        });
+
+        viewer.loadObject(blobUrl);
+    });
+</script>
+
+</html>

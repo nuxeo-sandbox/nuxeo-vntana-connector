@@ -1,11 +1,11 @@
-<link rel="import" href="../widget/nuxeo-vntana-viewer.html">
+<link rel="import" href="../widget/nuxeo-vntana-embedded-viewer.html">
 
 <!--
 `vntana-viewer-tab`
 @group Nuxeo UI
 @element vntana-viewer-tab
 -->
-<dom-module id="nuxeo-vntana-viewer-tab">
+<dom-module id="nuxeo-vntana-embedded-viewer-tab">
     <template>
         <style include="nuxeo-styles iron-flex iron-flex-alignment">
             .page,
@@ -17,7 +17,7 @@
                 height: 32px;
             }
 
-            nuxeo-vntana-viewer {
+            nuxeo-vntana-embedded-viewer {
                 width: 100%;
                 height: calc(90vh - 100px);
             }
@@ -26,7 +26,7 @@
 
         <div class="page">
             <div class="content">
-                <nuxeo-vntana-viewer document="[[document]]"></nuxeo-vntana-viewer>
+                <nuxeo-vntana-embedded-viewer document="[[document]]"></nuxeo-vntana-embedded-viewer>
                 <div class="footer-padding"></div>
             </div>
         </div>
@@ -35,7 +35,7 @@
 
     <script>
         Polymer({
-            is: 'nuxeo-vntana-viewer-tab',
+            is: 'nuxeo-vntana-embedded-viewer-tab',
             behaviors: [Nuxeo.LayoutBehavior],
             properties: {
                 document: {

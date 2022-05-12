@@ -5,7 +5,12 @@
 -->
 <dom-module id="nuxeo-open-in-vntana">
     <template>
-        <style include="nuxeo-styles"></style>
+        <style include="nuxeo-styles">
+            a {
+                color: var(--nuxeo-secondary-color, #0066ff);
+                text-decoration: underline;
+            }
+        </style>
         <a href="[[_getSource(document)]]" target="_blank" rel="noreferrer noopener">Open in Vntana</a>
     </template>
 
@@ -22,7 +27,6 @@
             _getSource: function (document) {
                 return document ? `https://platform.vntana.com/${document.properties['vntana:organization_slug']}/${document.properties['vntana:client_slug']}/products/edit/${document.properties['vntana:product_uuid']}` : "";
             }
-
         });
     </script>
 </dom-module>

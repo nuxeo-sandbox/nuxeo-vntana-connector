@@ -14,16 +14,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<link rel="import" href="./tab/nuxeo-vntana-viewer-tab.html">
-<link rel="import" href="./widget/nuxeo-open-in-vntana.html">
+<link rel="import" href="./tab/nuxeo-vntana-embedded-viewer-tab.html">
+<link rel="import" href="./widget/vntana-info-view.html">
 
 <nuxeo-slot-content name="VntanaPublish" slot="DOCUMENT_ACTIONS" order="120">
     <template>
         <nuxeo-filter document="[[document]]" expression="Nuxeo.UI.config.vntana.enabled === 'true' && !document.facets.includes('Vntana') && document.contextParameters.vntana.isSupported">
             <template>
-                <nuxeo-operation-button icon="icons:3d-rotation" label="Publish to Vntana" tooltip="Publish to Vntana" operation="Vntana.PublishModel"
+                <nuxeo-operation-button icon="icons:3d-rotation" label="vntana.action.publish" tooltip="Publish to Vntana" operation="Vntana.PublishModel"
                                         input="[[document]]" params='{"save":true}'
-                                        event="document-updated" notification="Success" error-label="Failure">
+                                        event="document-updated" notification="vntana.action.publish.success" error-label="vntana.action.publish.failure">
                 </nuxeo-operation-button>
             </template>
         </nuxeo-filter>
@@ -34,9 +34,9 @@ limitations under the License.
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]" expression="Nuxeo.UI.config.vntana.enabled === 'true'">
             <template>
-                <nuxeo-operation-button icon="icons:3d-rotation" label="Refresh Vntana Status" operation="Vntana.UpdateModelRemoteProcessingStatus"
-                                        input="[[document]]" params='{"save":true}' notification="Status Successfully Updated"
-                                        event="document-updated" error-label="Failed to Update Model Status">
+                <nuxeo-operation-button icon="icons:3d-rotation" label="vntana.action.update.status" operation="Vntana.UpdateModelRemoteProcessingStatus"
+                                        input="[[document]]" params='{"save":true}' notification="vntana.action.update.status.success"
+                                        event="document-updated" error-label="vntana.action.update.status.failure">
                 </nuxeo-operation-button>
             </template>
         </nuxeo-filter>
@@ -47,9 +47,9 @@ limitations under the License.
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]" expression="Nuxeo.UI.config.vntana.enabled === 'true'">
             <template>
-                <nuxeo-operation-button icon="icons:3d-rotation" label="Update on Vntana" operation="Vntana.UpdateModel"
-                                        input="[[document]]" params='{"save":true}' notification="Model Sucessfully Updated on Vntana"
-                                        event="document-updated" error-label="Failed to Update Model">
+                <nuxeo-operation-button icon="icons:3d-rotation" label="vntana.action.republish" operation="Vntana.UpdateModel"
+                                        input="[[document]]" params='{"save":true}' notification="vntana.action.republish.success"
+                                        event="document-updated" error-label="vntana.action.republish.failure">
                 </nuxeo-operation-button>
             </template>
         </nuxeo-filter>
@@ -60,9 +60,9 @@ limitations under the License.
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" permission="Write" user="[[user]]" expression="Nuxeo.UI.config.vntana.enabled === 'true'">
             <template>
-                <nuxeo-operation-button icon="icons:3d-rotation" label="Unpublish From Vntana" operation="Vntana.UnpublishModel"
-                                        input="[[document]]" params='{"save":true}' notification="Model Sucessfully Unpublished From Vntana"
-                                        event="document-updated" error-label="Failed to Unpublish Model">
+                <nuxeo-operation-button icon="icons:3d-rotation" label="vntana.action.unpublish" operation="Vntana.UnpublishModel"
+                                        input="[[document]]" params='{"save":true}' notification="vntana.action.unpublish.success"
+                                        event="document-updated" error-label="vntana.action.unpublish.failure">
                 </nuxeo-operation-button>
             </template>
         </nuxeo-filter>
@@ -74,7 +74,7 @@ limitations under the License.
         <nuxeo-filter document="[[document]]" facet="Vntana" user="[[user]]"
                       expression="Nuxeo.UI.config.vntana.enabled === 'true' && document.properties['vntana:status'] === 'LIVE'">
             <template>
-                <nuxeo-page-item name="vntanaviewertab" label="Vntana"></nuxeo-page-item>
+                <nuxeo-page-item name="vntanaviewertab" label="label.vntana.embedded"></nuxeo-page-item>
             </template>
         </nuxeo-filter>
     </template>
@@ -85,7 +85,7 @@ limitations under the License.
         <nuxeo-filter document="[[document]]" facet="Vntana" user="[[user]]"
                       expression="Nuxeo.UI.config.vntana.enabled === 'true' && document.properties['vntana:status'] === 'LIVE'">
             <template>
-                <nuxeo-vntana-viewer-tab document="[[document]]" name="vntanaviewertab"></nuxeo-vntana-viewer-tab>
+                <nuxeo-vntana-embedded-viewer-tab document="[[document]]" name="vntanaviewertab"></nuxeo-vntana-embedded-viewer-tab>
             </template>
         </nuxeo-filter>
     </template>
