@@ -82,4 +82,6 @@ public interface VntanaService {
 
     Blob download(DocumentModel doc, Model.ConversionFormatEnum format);
 
+    Blob thumbnail(DocumentModel doc);
+
 }

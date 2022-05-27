@@ -129,4 +129,14 @@ public class TestVntanaService {
         Assert.assertTrue(blob.getLength() > 0);
     }
 
+    @Test
+    public void testDownloadModelThumbnail() {
+        DocumentModel model = vntanaTestFeature.getDefaultProductAsDocument(session);
+        Blob blob = vntanaservice.thumbnail(model);
+        Assert.assertNotNull(blob);
+        Assert.assertEquals("image/png",blob.getMimeType());
+        Assert.assertNotNull(blob.getFilename());
+        Assert.assertTrue(blob.getLength() > 0);
+    }
+
 }

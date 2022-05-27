@@ -409,22 +409,25 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
                 organizationToken, adapter.getClientUUID(), format.getValue(), adapter.getProductUUID(), null)
                                                                  .execute()) {
             if (response.isSuccessful()) {
-                File file = getApiClient().downloadFileFromResponse(response);
+                return downloadFile(response);
+            } else {
+                throw new NuxeoException("Failed to download");
+            }
+        } catch (IOException | ApiException e) {
+            throw new NuxeoException("Failed to download", e);
+        }
+    }
 
-                String contentDisposition = response.header("Content-Disposition");
-                String filename = null;
-                if (StringUtils.isNotBlank(contentDisposition)) {
-                    Pattern pattern = Pattern.compile("filename=['\"]?([^'\";]+)['\"]?");
-                    Matcher matcher = pattern.matcher(contentDisposition);
-                    if (matcher.find()) {
-                        filename = getApiClient().sanitizeFilename(matcher.group(1));
-                    }
-                }
-                Blob blob = new FileBlob(file, response.headers().get("content-type"));
-                if (StringUtils.isNotBlank(filename)) {
-                    blob.setFilename(filename);
-                }
-                return blob;
+    @Override
+    public Blob thumbnail(DocumentModel doc) {
+        VntanaAdapter adapter = getAdapter(doc);
+        ProductGetResponseModel productModel = getProduct(doc.getAdapter(VntanaAdapter.class));
+        String thumbnailBlobId = productModel.getAsset().getThumbnailBlobId();
+        String organizationToken = getOrganizationToken(adapter.getOrganizationUUID());
+        try (Response response = new OperationsAboutProductsApi().loadProductThumbnailResourceUsingGETCall(
+                        organizationToken, adapter.getClientUUID(), adapter.getProductUUID(),thumbnailBlobId, null,null,null).execute()) {
+            if (response.isSuccessful()) {
+                return downloadFile(response);
             } else {
                 throw new NuxeoException("Failed to download");
             }
@@ -500,6 +503,28 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         CacheService cacheService = Framework.getService(CacheService.class);
         Cache cache = cacheService.getCache(VNTANA_TOKEN_CACHE_NAME);
         cache.put(key, token);
+    }
+
+    protected VntanaAdapter getAdapter(DocumentModel doc) {
+        return doc.getAdapter(VntanaAdapter.class);
+    }
+
+    protected Blob downloadFile(Response response) throws ApiException {
+        File file = getApiClient().downloadFileFromResponse(response);
+        String contentDisposition = response.header("Content-Disposition");
+        String filename = null;
+        if (StringUtils.isNotBlank(contentDisposition)) {
+            Pattern pattern = Pattern.compile("filename=['\"]?([^'\";]+)['\"]?");
+            Matcher matcher = pattern.matcher(contentDisposition);
+            if (matcher.find()) {
+                filename = getApiClient().sanitizeFilename(matcher.group(1));
+            }
+        }
+        Blob blob = new FileBlob(file, response.headers().get("content-type"));
+        if (StringUtils.isNotBlank(filename)) {
+            blob.setFilename(filename);
+        }
+        return blob;
     }
 
 }

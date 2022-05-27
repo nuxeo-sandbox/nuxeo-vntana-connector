@@ -5719,6 +5719,119 @@
         "deprecated": false
       }
     },
+    "/v1/products/{productUuid}/clients/{clientUuid}/thumbnails/{thumbnailBlobId}": {
+      "get": {
+        "tags": [
+          "Operations about products"
+        ],
+        "summary": "Load product thumbnail through image resizing",
+        "operationId": "loadProductThumbnailResourceUsingGET",
+        "produces": [
+          "*/*",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clientUuid",
+            "in": "path",
+            "description": "clientUuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "description": "height",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "productUuid",
+            "in": "path",
+            "description": "productUuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "thumbnailBlobId",
+            "in": "path",
+            "description": "thumbnailBlobId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "description": "width",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/products/{productUuid}/download/asset/{blobId}": {
+      "get": {
+        "tags": [
+          "Operations about products"
+        ],
+        "summary": "resumableLoadProductAssetOriginalResource",
+        "operationId": "resumableLoadProductAssetOriginalResourceUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "blobId",
+            "in": "path",
+            "description": "blobId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clientUuid",
+            "in": "query",
+            "description": "clientUuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "productUuid",
+            "in": "path",
+            "description": "productUuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/v1/products/{productUuid}/download/asset": {
       "get": {
         "tags": [
