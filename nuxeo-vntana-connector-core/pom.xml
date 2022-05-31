@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.nuxeo.labs.vntana</groupId>
     <artifactId>nuxeo-vntana-connector-parent</artifactId>
-    <version>2021.3.0-SNAPSHOT</version>
+    <version>2021.4.0-SNAPSHOT</version>
   </parent>
   <artifactId>nuxeo-vntana-connector-core</artifactId>
   <name>Nuxeo Vntana Connector Core</name>
