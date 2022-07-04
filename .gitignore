@@ -30,3 +30,4 @@ bin/
 *.bak
 *~gen
 conf.d/vntana.conf
+/nuxeo-vntana-connector-annotation/.env

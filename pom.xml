@@ -24,6 +24,7 @@
   <modules>
     <module>nuxeo-vntana-connector-client</module>
     <module>nuxeo-vntana-connector-core</module>
+    <module>nuxeo-vntana-connector-annotation</module>
     <module>nuxeo-vntana-connector-webui</module>
     <module>nuxeo-vntana-connector-package</module>
     <module>nuxeo-vntana-connector-docker</module>
@@ -47,6 +48,11 @@
       <dependency>
         <groupId>org.nuxeo.labs.vntana</groupId>
         <artifactId>nuxeo-vntana-connector-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.nuxeo.labs.vntana</groupId>
+        <artifactId>nuxeo-vntana-connector-annotation</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
