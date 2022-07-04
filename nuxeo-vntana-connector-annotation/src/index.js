@@ -2,7 +2,9 @@ import './styles.css';
 import Nuxeo from 'nuxeo';
 
 
-const nuxeo = new Nuxeo({});
+const nuxeo = new Nuxeo({
+    baseURL: '/nuxeo'
+});
 
 let nxUser;
 let nxDoc;
