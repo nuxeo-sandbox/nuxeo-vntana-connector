@@ -7,6 +7,7 @@ const nuxeo = new Nuxeo({
 });
 
 let nxUser;
+let allUsers;
 let nxDoc;
 let nxAnnotations;
 let nxComments;
@@ -51,14 +52,15 @@ function getContext() {
             }
         });
     }).then(annotations => {
-        nxAnnotations = annotations;
+        nxAnnotations = annotations.entries;
         //get comments
         return nuxeo.request(`id/${nxDoc.uid}/@annotation/comments`).post({
             body: annotations.entries.map((annotation) => {return annotation.id})
         });
     }).then(comments => {
-        nxComments = comments;
+        nxComments = comments.entries;
         vnAnnotations = nx2vntanaAnnotations(nxAnnotations);
+        allUsers = buildUserList();
         return Promise.resolve();
     }).catch(function (error) {
         throw error;
@@ -75,12 +77,7 @@ function setupViewer() {
         panelOrder: ["annotation", "settings"],
         hideSaveBtn: true,
         currentUserId: nxUser.id,
-        usersList: [
-            {
-                "userId": nxUser.id,
-                "userName": `${nxUser.properties.firstName} ${nxUser.properties.lastName}`
-            }
-        ],
+        usersList: allUsers,
         getAnnotations: () => {return vnAnnotations;},
         createAnnotation: createAnnotation,
         updateAnnotation: updateAnnotation,
@@ -106,7 +103,7 @@ function setupViewer() {
 }
 
 function nx2vntanaAnnotations(nxAnnotations) {
-    let vnAnnotations = nxAnnotations.entries.map((entry,index) => {
+    let vnAnnotations = nxAnnotations.map((entry,index) => {
         let vnAnnotation = JSON.parse(entry.entity);
         return {
             userId: entry.author,
@@ -129,6 +126,17 @@ function nx2vntanaAnnotations(nxAnnotations) {
             }
         }
     }
+}
+
+function buildUserList() {
+    let annotationUsers = nxAnnotations.map(entry => entry.author);
+    let commentUsers = nxComments.map(entry => entry.author);
+    return Array.from(new Set(annotationUsers.concat(commentUsers))).map(entry => {
+        return {
+            userId: entry,
+            userName: entry === nxUser.id ? `${nxUser.properties.firstName} ${nxUser.properties.lastName}` : entry
+        };
+    });
 }
 
 function createAnnotation(requestData) {
@@ -191,7 +199,7 @@ function deleteAnnotation(annotation) {
 }
 
 function getAnnotationComments(annotation) {
-    let vnComments = nxComments.entries.flatMap(entry => {
+    let vnComments = nxComments.flatMap(entry => {
         if (entry.parentId === annotation.entityUuid) {
             return [{
                 userId: entry.author,
