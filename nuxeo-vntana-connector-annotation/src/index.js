@@ -207,8 +207,8 @@ function getAnnotationComments(annotation) {
                 message: entry.text,
                 uuid: entry.id,
                 entityUuid: annotation.entityUuid,
-                created: entry.creationDate,
-                updated: entry.modificationDate,
+                created: entry.creationDate.slice(0, -1),
+                updated: entry.modificationDate.slice(0, -1)
             }];
         } else {
             return [];
