@@ -54,9 +54,14 @@ function getContext() {
     }).then(annotations => {
         nxAnnotations = annotations.entries;
         //get comments
-        return nuxeo.request(`id/${nxDoc.uid}/@annotation/comments`).post({
-            body: annotations.entries.map((annotation) => {return annotation.id})
-        });
+        if (nxAnnotations.length > 0) {
+            return nuxeo.request(`id/${nxDoc.uid}/@annotation/comments`).post({
+                body: annotations.entries.map((annotation) => {return annotation.id})
+            });
+        } else {
+            //no annotation so no need to try to fetch annotation comment
+            return Promise.resolve({ entries: []});
+        }
     }).then(comments => {
         nxComments = comments.entries;
         vnAnnotations = nx2vntanaAnnotations(nxAnnotations);
