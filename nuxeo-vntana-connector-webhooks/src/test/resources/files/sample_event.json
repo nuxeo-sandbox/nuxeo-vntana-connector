@@ -1,0 +1,42 @@
+{
+  "event": "product.added",
+  "organization": {
+    "uuid": "string"
+  },
+  "product": {
+    "uuid": "1234",
+    "name": "TestWebhooks",
+    "description": "This is a test of product events",
+    "locations": [],
+    "tags": [],
+    "attributes": {
+      "sku": "2345",
+      "color": "white"
+    },
+    "status": "DRAFT",
+    "material": null,
+    "optimization": null,
+    "asset": null,
+    "autoPublish": false,
+    "rendererConfigs": null,
+    "dracoCompression": null,
+    "textureCompression": null,
+    "modelOpsParameters": {
+      "PIVOT_POINT_ALIGNMENT": {
+        "pivotPoint": "center"
+      },
+      "DRACO_COMPRESSION": {
+        "enabled": "false"
+      },
+      "ORIENTATION": null,
+      "TEXTURE_COMPRESSION": null,
+      "OPTIMIZATION": null,
+      "AR_SCALING": null
+    },
+    "pipelineUuid": "87d414ec-e1f3-4fe3-a5f9-ac4b9cdc51f1",
+    "preset": null
+  },
+  "client": {
+    "uuid": "string"
+  }
+}
