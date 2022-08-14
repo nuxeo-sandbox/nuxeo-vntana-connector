@@ -23,6 +23,7 @@ Several configuration settings are available.
 | vntana.api.key                  | The API key to use when calling Vntana's REST API                  |
 | vntana.api.default.organization | The default vnatana organization UUID where models get published   |
 | vntana.api.default.client       | The default vntana client (folder) UUID where models get published |
+| vntana.webhook.secret           | The secret to use to verify event callback from vntana             |
 
 ## Supported Documents
 Whether a Document can be published or not to Vntana is controled by a Nuxeo Filter extension. The [default contribution](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/blob/master/nuxeo-vntana-connector-core/src/main/resources/OSGI-INF/service-service.xml) can be overridden in a configuration template, plugin or Nuxeo Studio.  
@@ -167,6 +168,25 @@ UI actions corresponding to the Automation operations are included into the plug
 ![UI Publish Model Action Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/publish_to_vntana_action.png)
 
 ![UI Published Model Actions Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/published_asset_actions.png)
+
+## Webhooks
+This plugin implements an endpoint to receive events from Vntana. The callback URL is `https://myserver/nuxeo/site/vntana/event`. The endpoint will generate a `vntanaEvent` event in Nuxeo that can be catched with event listeners in java or event handlers in Nuxeo Studio. Below is a sample automation script triggered by event handler:
+
+![UI Published Model Actions Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/webhook_event_handler.png)
+
+```js
+function run(input, params) {
+  Auth.LoginAs(input, {});
+  //get Vntana Event
+  var event = ctx.Event.getContext().getProperty("vntanaEvent");
+  Console.log('Received Event from Vntana: '+ event);
+
+  var eventName = event.event;
+  var productUuid = event.product.uuid; 
+  
+  //do things
+}
+```
 
 # Support
 
