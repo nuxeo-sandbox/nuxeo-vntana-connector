@@ -170,7 +170,7 @@ UI actions corresponding to the Automation operations are included into the plug
 ![UI Published Model Actions Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/published_asset_actions.png)
 
 ## Webhooks
-This plugin implements an endpoint to receive events from Vntana. The callback URL is `https://myserver/nuxeo/site/vntana/event`. The endpoint will generate a `vntanaEvent` event in Nuxeo that can be catched with event listeners in java or event handlers in Nuxeo Studio. Below is a sample automation script triggered by event handler:
+This plugin implements an endpoint to receive [events from Vntana](https://www.vntana.com/resource/webhooks/). The callback URL is `https://myserver/nuxeo/site/vntana/event`. The endpoint will generate a `vntanaEvent` event in Nuxeo that can be catched with event listeners in java or event handlers in Nuxeo Studio. Below is a sample automation script triggered by event handler:
 
 ![UI Published Model Actions Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/webhook_event_handler.png)
 
