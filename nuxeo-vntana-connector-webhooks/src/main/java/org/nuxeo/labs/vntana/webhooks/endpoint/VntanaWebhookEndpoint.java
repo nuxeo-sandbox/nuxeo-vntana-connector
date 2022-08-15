@@ -37,6 +37,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.buf.HexUtils;
@@ -81,9 +82,12 @@ public class VntanaWebhookEndpoint extends ModuleRoot {
             String timestamp = request.getHeader(HEADER_TIMESTAMP);
             String signature = request.getHeader(HEADER_VNTANA_SIGNATURE);
             String secret = Framework.getProperty(VNTANA_WEBHOOK_SECRET_PROPERTY);
-            if(!isValidSignature(timestamp, requestBody, secret, signature)){
+            if (StringUtils.isBlank(secret)) {
+                log.debug("Vntana webhook secret is not set");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            } else if(!isValidSignature(timestamp, requestBody, secret, signature)){
                 log.debug("Wrong signature from Vnatana");
-                return Response.status(Response.Status.FORBIDDEN).build();
+                return Response.status(Response.Status.UNAUTHORIZED).build();
             }
             VntanaEvent event = objectMapper.readValue(requestBody, VntanaEvent.class);
             EventContextImpl ctx = new EventContextImpl();

@@ -28,6 +28,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -75,7 +76,6 @@ public class TestWebhookEndpoint {
 
     @Before
     public void setup() {
-        Framework.getProperties().setProperty(VNTANA_WEBHOOK_SECRET_PROPERTY,"the-secret");
         client = Client.create();
         client.setConnectTimeout(TIMEOUT);
         client.setReadTimeout(TIMEOUT);
@@ -84,12 +84,12 @@ public class TestWebhookEndpoint {
 
     @Test
     public void shouldFireEvent() throws IOException, NoSuchAlgorithmException, InvalidKeyException {
-
+        Framework.getProperties().setProperty(VNTANA_WEBHOOK_SECRET_PROPERTY,"the-secret");
         CapturingEventListener listener = new CapturingEventListener(VNTANA_EVENT);
 
         ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
         arrayNode.add(new ObjectNode(JsonNodeFactory.instance));
-        WebResource webResource = client.resource(getBaseURL()).path("vntana").path("event");
+        WebResource webResource = getWebhookResource();
 
         File jsonPayload = FileUtils.getResourceFileFromContext("files/sample_event.json");
         byte[] jsonData = Files.readAllBytes(Paths.get(jsonPayload.toURI()));
@@ -105,13 +105,36 @@ public class TestWebhookEndpoint {
                                              .header(HEADER_VNTANA_SIGNATURE, signature)
                                              .post(ClientResponse.class, jsonPost);
 
-        assertEquals(200, response.getStatus());
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertEquals(1, listener.getCapturedEventCount(VNTANA_EVENT));
+    }
+
+    public void noSecretIsInternalError() {
+        WebResource webResource = getWebhookResource();
+        ClientResponse response = webResource.accept(CONTENT_TYPE)
+                .type(CONTENT_TYPE)
+                .post(ClientResponse.class, "{}");
+        assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response.getStatus());
+    }
+
+    public void wrongSignatureIsUnauthorized() {
+        Framework.getProperties().setProperty(VNTANA_WEBHOOK_SECRET_PROPERTY,"the-secret");
+        WebResource webResource = getWebhookResource();
+        ClientResponse response = webResource.accept(CONTENT_TYPE)
+                .type(CONTENT_TYPE)
+                .header(HEADER_TIMESTAMP, "123")
+                .header(HEADER_VNTANA_SIGNATURE, "wrong")
+                .post(ClientResponse.class, "{}");
+        assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
     }
 
     protected String getBaseURL() {
         int port = servletContainerFeature.getPort();
         return "http://localhost:" + port;
+    }
+
+    protected WebResource getWebhookResource() {
+        return  client.resource(getBaseURL()).path("vntana").path("event");
     }
 
 }
