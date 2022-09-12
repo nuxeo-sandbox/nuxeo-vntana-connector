@@ -1,7 +1,6 @@
 import './styles.css';
 import Nuxeo from 'nuxeo';
 
-
 const nuxeo = new Nuxeo({
     baseURL: '/nuxeo'
 });
@@ -67,8 +66,8 @@ function getContext() {
         vnAnnotations = nx2vntanaAnnotations(nxAnnotations);
         allUsers = buildUserList();
         return Promise.resolve();
-    }).catch(function (error) {
-        throw error;
+    }).catch(function () {
+        displayErrorMessage();
     });
 }
 
@@ -92,6 +91,9 @@ function setupViewer() {
         createComment: createComment,
         updateComment: updateComment,
         deleteComment: deleteComment,
+        onError: () => {
+            displayErrorMessage();
+        },
         onSuccess: () => {
             let menuElement = document.querySelector('#ViewerEditorBtn');
             menuElement.click();
@@ -255,5 +257,10 @@ function updateComment(requestData) {
 
 function deleteComment(uuid) {
     return nuxeo.request(`id/${uuid}`).delete();
+}
+
+function displayErrorMessage() {
+    let messageElement = document.querySelector('#message');
+    messageElement.style.display = 'block';
 }
 

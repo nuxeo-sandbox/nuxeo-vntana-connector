@@ -1,12 +1,34 @@
 html,
-body {
-    margin: 0px;
+body,
+.main {
+    margin: 0;
     height: 100%;
+    font-family: Inter, Arial, sans-serif;
+}
+
+.main {
+    position:relative;
 }
 
 #viewer {
     width: 100%;
     height: 100%;
+}
+
+#message {
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    background: #aaaaaa;
+    opacity: 0.5;
+}
+
+#error {
+    margin:32px;
 }
 
 #ViewerEditorBtn {
