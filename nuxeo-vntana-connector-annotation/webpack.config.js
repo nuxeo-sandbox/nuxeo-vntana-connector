@@ -19,7 +19,7 @@ const config = {
         open: true,
         host: 'localhost',
         port: 8000,
-        open: ['/index.html?docId=a2c6d2fd-1b68-48e0-8301-3c722908e197'],
+        open: ['/index.html?docId='+process.env.TEST_DOC_ID],
         proxy: {
             '/nuxeo': {
               target: process.env.DEV_SERVER_URL,
