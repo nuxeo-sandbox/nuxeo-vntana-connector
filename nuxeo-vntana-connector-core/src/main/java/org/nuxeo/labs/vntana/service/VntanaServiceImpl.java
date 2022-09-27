@@ -195,7 +195,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public ProductGetResponseModel getProduct(VntanaProductReference productRef) {
         String organizationToken = getOrganizationToken(productRef.getOrganizationUUID());
         try {
-            ProductGetResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).getByUuidUsingGET4(
+            ProductGetResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).getByUuidUsingGET3(
                     organizationToken, productRef.getProductUUID());
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
@@ -250,7 +250,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
 
         try {
             String organizationToken = getOrganizationToken(organizationUUID);
-            ProductCreateResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).createUsingPOST5(
+            ProductCreateResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).createUsingPOST4(
                     organizationToken, productCreateRequest);
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();

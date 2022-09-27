@@ -1,11 +1,15 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "VNTANA API Documentation",
-    "version": 1.2,
-    "title": "VNTANA API Documentation",
-    "termsOfService": "https://www.vntana.com/terms-and-conditions-of-use/",
-    "contact": {}
+    "description": "Api Documentation",
+    "version": "1.0",
+    "title": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
   },
   "host": "api-platform.vntana.com",
   "schemes": [
@@ -19,6 +23,18 @@
     "application/json"
   ],
   "tags": [
+    {
+      "name": "Operations about Events",
+      "description": "Event Gateway Resource"
+    },
+    {
+      "name": "Operations about Webhooks",
+      "description": "Webhook Gateway Resource"
+    },
+    {
+      "name": "Operations about analytics",
+      "description": "Analytics Gateway Resource"
+    },
     {
       "name": "Operations about annotations",
       "description": "Annotation Resource"
@@ -70,10 +86,6 @@
     {
       "name": "Operations about pipelines",
       "description": "Pipeline Resource"
-    },
-    {
-      "name": "Operations about product generation request",
-      "description": "Product Generation Request Resource"
     },
     {
       "name": "Operations about products",
@@ -4019,6 +4031,112 @@
         "deprecated": false
       }
     },
+    "/v1/metrics/query": {
+      "post": {
+        "tags": [
+          "Operations about analytics"
+        ],
+        "summary": "getData",
+        "operationId": "getDataUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "queryRequest",
+            "description": "queryRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnalyticsQueryRequestModelCommon"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AnalyticsQueryResponseCommon"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/metrics/query/avg-num-of-interactions": {
+      "post": {
+        "tags": [
+          "Operations about analytics"
+        ],
+        "summary": "avgNumOfInteractions",
+        "operationId": "avgNumOfInteractionsUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "queryRequest",
+            "description": "queryRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnalyticsQueryRequestModelCommon"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/metrics/query/most-viewed-products": {
+      "post": {
+        "tags": [
+          "Operations about analytics"
+        ],
+        "summary": "mostViewedProducts",
+        "operationId": "mostViewedProductsUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "queryRequest",
+            "description": "queryRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AnalyticsQueryRequestModelCommon"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AnalyticsMostViewedProductResponseModelCommon"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/v1/organizations": {
       "get": {
         "tags": [
@@ -4255,113 +4373,13 @@
         "deprecated": false
       }
     },
-    "/v1/product-generation-requests": {
-      "post": {
-        "tags": [
-          "Operations about product generation request"
-        ],
-        "summary": "create",
-        "operationId": "createUsingPOST_4",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ProductGenerationRequestCreateRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ProductGenerationRequestCreateResultResponse"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/v1/product-generation-requests/search": {
-      "post": {
-        "tags": [
-          "Operations about product generation request"
-        ],
-        "summary": "search",
-        "operationId": "searchUsingPOST_5",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/FindProductGenerationRequestByFilterRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ProductGenerationRequestSearchResultResponse"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/v1/product-generation-requests/{uuid}": {
-      "get": {
-        "tags": [
-          "Operations about product generation request"
-        ],
-        "summary": "getByUuid",
-        "operationId": "getByUuidUsingGET_3",
-        "produces": [
-          "*/*"
-        ],
-        "parameters": [
-          {
-            "name": "uuid",
-            "in": "path",
-            "description": "uuid",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ProductGenerationRequestGetResultResponse"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    },
     "/v1/products": {
       "post": {
         "tags": [
           "Operations about products"
         ],
         "summary": "Create a new product",
-        "operationId": "createUsingPOST_5",
+        "operationId": "createUsingPOST_4",
         "consumes": [
           "application/json"
         ],
@@ -4419,7 +4437,7 @@
           },
           {
             "name": "modelOpsParameters",
-            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\"\n    }",
+            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"PIVOT_POINT_ALIGNMENT\": {\n      \"pivotPoint\": \"bottom-center\" \"or\" \"center\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\",\n      \"useKTX\": \"true\" \"or\" \"false\"\n    }",
             "required": true,
             "schema": {
               "type": "string"
@@ -4553,7 +4571,7 @@
           },
           {
             "name": "modelOpsParameters",
-            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\"\n    }",
+            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"PIVOT_POINT_ALIGNMENT\": {\n      \"pivotPoint\": \"bottom-center\" \"or\" \"center\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\",\n      \"useKTX\": \"true\" \"or\" \"false\"\n    }",
             "required": true,
             "schema": {
               "type": "string"
@@ -4631,7 +4649,7 @@
           "Operations about products"
         ],
         "summary": "Search products",
-        "operationId": "searchUsingPOST_6",
+        "operationId": "searchUsingPOST_5",
         "consumes": [
           "application/json"
         ],
@@ -4963,7 +4981,7 @@
           {
             "in": "body",
             "name": "modelOpsParameters",
-            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\"\n    }",
+            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"PIVOT_POINT_ALIGNMENT\": {\n      \"pivotPoint\": \"bottom-center\" \"or\" \"center\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\",\n      \"useKTX\": \"true\" \"or\" \"false\"\n    }",
             "required": true,
             "schema": {
               "type": "string"
@@ -5055,9 +5073,6 @@
         "operationId": "deleteUsingDELETE_4",
         "produces": [
           "*/*",
-          "application/json"
-        ],
-        "consumes": [
           "application/json"
         ],
         "parameters": [
@@ -5638,7 +5653,7 @@
           },
           {
             "name": "modelOpsParameters",
-            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\"\n    }",
+            "description": "    \n    \"DRACO_COMPRESSION\": {\n      \"enabled\": \"true\" \"or\" \"false\",\n    },\n    \"OPTIMIZATION\": {\n      \"desiredOutput\": \"AUTO\",\n      \"obstructedGeometry\": \"true\" \"or\" \"false\",\n      \"poly\": \"1000\"\n    },\n    \"PIVOT_POINT_ALIGNMENT\": {\n      \"pivotPoint\": \"bottom-center\" \"or\" \"center\"\n    },\n    \"TEXTURE_COMPRESSION\": {\n      \"lossless\": \"true\" \"or\" \"false\",\n      \"maxDimension\": \"1024\",\n      \"aggression\": \"7\",\n      \"useKTX\": \"true\" \"or\" \"false\"\n    }",
             "required": true,
             "schema": {
               "type": "string"
@@ -5784,31 +5799,17 @@
         "deprecated": false
       }
     },
-    "/v1/products/{productUuid}/download/asset/{blobId}": {
+    "/v1/products/{productUuid}/download/asset": {
       "get": {
         "tags": [
           "Operations about products"
         ],
-        "summary": "resumableLoadProductAssetOriginalResource",
-        "operationId": "resumableLoadProductAssetOriginalResourceUsingGET",
+        "summary": "loadProductAssetOriginalResource",
+        "operationId": "loadProductAssetOriginalResourceUsingGET",
         "produces": [
           "*/*"
         ],
         "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "Organization specific token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "blobId",
-            "in": "path",
-            "description": "blobId",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "clientUuid",
             "in": "query",
@@ -5832,13 +5833,13 @@
         "deprecated": false
       }
     },
-    "/v1/products/{productUuid}/download/asset": {
+    "/v1/products/{productUuid}/download/asset/{blobId}": {
       "get": {
         "tags": [
           "Operations about products"
         ],
-        "summary": "loadProductAssetOriginalResource",
-        "operationId": "loadProductAssetOriginalResourceUsingGET",
+        "summary": "resumableLoadProductAssetOriginalResource",
+        "operationId": "resumableLoadProductAssetOriginalResourceUsingGET",
         "produces": [
           "*/*"
         ],
@@ -5847,6 +5848,13 @@
             "name": "X-AUTH-TOKEN",
             "in": "header",
             "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "blobId",
+            "in": "path",
+            "description": "blobId",
             "required": true,
             "type": "string"
           },
@@ -5906,7 +5914,61 @@
             "type": "string",
             "enum": [
               "GLB",
-              "USDZ"
+              "USDZ",
+              "FBX"
+            ]
+          },
+          {
+            "name": "productUuid",
+            "in": "path",
+            "description": "productUuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/products/{productUuid}/download/model/{blobId}": {
+      "get": {
+        "tags": [
+          "Operations about products"
+        ],
+        "summary": "resumableLoadProductAssetModelResource",
+        "operationId": "resumableLoadProductAssetModelResourceUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "blobId",
+            "in": "path",
+            "description": "blobId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clientUuid",
+            "in": "query",
+            "description": "clientUuid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "conversionFormat",
+            "in": "query",
+            "description": "conversionFormat",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "GLB",
+              "USDZ",
+              "FBX"
             ]
           },
           {
@@ -5931,7 +5993,7 @@
           "Operations about products"
         ],
         "summary": "Get product by uuid",
-        "operationId": "getByUuidUsingGET_4",
+        "operationId": "getByUuidUsingGET_3",
         "produces": [
           "*/*",
           "application/json"
@@ -5984,7 +6046,7 @@
           "Operations about showrooms"
         ],
         "summary": "Create a new showroom",
-        "operationId": "createUsingPOST_6",
+        "operationId": "createUsingPOST_5",
         "consumes": [
           "application/json"
         ],
@@ -6322,7 +6384,7 @@
           "Operations about showrooms"
         ],
         "summary": "Search showrooms",
-        "operationId": "searchUsingPOST_7",
+        "operationId": "searchUsingPOST_6",
         "consumes": [
           "application/json"
         ],
@@ -6721,98 +6783,6 @@
         "deprecated": false
       }
     },
-    "/v1/storage/upload/clients/products/generation-request/sign-url": {
-      "post": {
-        "tags": [
-          "Operations about files upload"
-        ],
-        "summary": "Create product generation request upload sign url session",
-        "description": "returns location URI for the requested uuid and file parameters where the same file should be uploaded by using resumable upload protocol,for more information about resumable upload go to [Google Resumable uploads documentation.](https://cloud.google.com/storage/docs/resumable-uploads)",
-        "operationId": "createClientProductGenerationRequestUploadSignUrlSessionUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "*/*",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "X-AUTH-TOKEN",
-            "in": "header",
-            "description": "Organization specific token",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "clientUuid",
-            "description": "client's uuid",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "productUuid",
-            "description": "product's uuid",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "body",
-            "name": "request",
-            "description": "request",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/AdminCommonGCloudStorageProductGenerationRequestUploadSignUrlSessionRequest"
-            }
-          },
-          {
-            "name": "resourceSettings",
-            "description": "resource's settings original name, original size, content type",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/GCloudStorageResourceCreateSignUrlSessionResponseOk"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/GCloudStorageResourceCreateSignUrlSessionResponseBadRequest"
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "schema": {
-              "$ref": "#/definitions/GCloudStorageResourceCreateSignUrlSessionResponseForbidden"
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "schema": {
-              "$ref": "#/definitions/GCloudStorageResourceCreateSignUrlSessionResponseConflict"
-            }
-          },
-          "422": {
-            "description": "Unprocessable Entity",
-            "schema": {
-              "$ref": "#/definitions/GCloudStorageResourceCreateSignUrlSessionResponseUnprocessable"
-            }
-          }
-        },
-        "deprecated": false
-      }
-    },
     "/v1/tag-groups/clients/{clientUuid}": {
       "get": {
         "tags": [
@@ -6882,7 +6852,7 @@
           "Operations about tag groups"
         ],
         "summary": "Create a new tag",
-        "operationId": "createUsingPOST_7",
+        "operationId": "createUsingPOST_6",
         "consumes": [
           "application/json"
         ],
@@ -7287,7 +7257,7 @@
           "Operations about tags"
         ],
         "summary": "Create a new tag",
-        "operationId": "createUsingPOST_8",
+        "operationId": "createUsingPOST_7",
         "consumes": [
           "application/json"
         ],
@@ -7408,7 +7378,7 @@
           "Operations about tags"
         ],
         "summary": "Search tags",
-        "operationId": "searchUsingPOST_8",
+        "operationId": "searchUsingPOST_7",
         "consumes": [
           "application/json"
         ],
@@ -7645,13 +7615,64 @@
         "deprecated": false
       }
     },
+    "/v1/users/account-details": {
+      "get": {
+        "tags": [
+          "Operations about users"
+        ],
+        "summary": "accountDetails",
+        "operationId": "accountDetailsUsingGET_1",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AdminUserAccountDetailsResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/users/account-details/{userUuid}": {
+      "get": {
+        "tags": [
+          "Operations about users"
+        ],
+        "summary": "accountDetails",
+        "operationId": "accountDetailsUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userUuid",
+            "in": "path",
+            "description": "userUuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AdminGetUserByOrganizationResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/v1/variant-groups": {
       "post": {
         "tags": [
           "Operations about variant groups"
         ],
         "summary": "Create a new variant group",
-        "operationId": "createUsingPOST_9",
+        "operationId": "createUsingPOST_8",
         "consumes": [
           "application/json"
         ],
@@ -7685,12 +7706,6 @@
             "in": "query",
             "description": "variant group's name",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "organizationUuid",
-            "in": "query",
-            "required": false,
             "type": "string"
           },
           {
@@ -7971,7 +7986,7 @@
           "Operations about variant groups"
         ],
         "summary": "Search variant groups by filter",
-        "operationId": "searchUsingPOST_9",
+        "operationId": "searchUsingPOST_8",
         "consumes": [
           "application/json"
         ],
@@ -7996,113 +8011,21 @@
             }
           },
           {
-            "name": "clientUuids",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "description",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "name",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
             "name": "organizationUuid",
-            "in": "query",
             "description": "variant group's organization uuid",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "1",
-            "required": false,
-            "type": "integer",
-            "exclusiveMaximum": false,
-            "minimum": 1,
-            "exclusiveMinimum": false,
-            "format": "int32",
-            "x-example": 1
-          },
-          {
-            "name": "productName",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "productsUuids",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
+            "schema": {
               "type": "string"
-            },
-            "collectionFormat": "multi"
+            }
           },
           {
-            "name": "searchTerm",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "30",
-            "required": false,
-            "type": "integer",
-            "exclusiveMaximum": false,
-            "minimum": 1,
-            "exclusiveMinimum": false,
-            "format": "int32",
-            "x-example": 1
-          },
-          {
-            "name": "statuses",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "DRAFT",
-                "LIVE"
-              ]
-            },
-            "collectionFormat": "multi",
-            "enum": [
-              "DRAFT",
-              "LIVE"
-            ]
-          },
-          {
-            "name": "tagName",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "tagsUuids",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "in": "body",
+            "name": "request",
+            "description": "request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VariantGroupSearchRequest"
+            }
           }
         ],
         "responses": {
@@ -8210,7 +8133,7 @@
           "Operations about variant groups"
         ],
         "summary": "Get variant group by uuid",
-        "operationId": "getByUuidUsingGET_5",
+        "operationId": "getByUuidUsingGET_4",
         "produces": [
           "*/*",
           "application/json"
@@ -8313,6 +8236,337 @@
                 "type": "string",
                 "description": "BLOB_NOT_FOUND"
               }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/webhooks/": {
+      "post": {
+        "tags": [
+          "Operations about Webhooks"
+        ],
+        "summary": "Save the webhook",
+        "operationId": "saveUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "adminWebhookRequestModel",
+            "description": "adminWebhookRequestModel",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AdminWebhookRequestModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseOk"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseConflict"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/webhooks/events/": {
+      "get": {
+        "tags": [
+          "Operations about Events"
+        ],
+        "summary": "Get all events",
+        "operationId": "getEventsUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseOk"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseConflict"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/webhooks/organization/{organizationUuid}": {
+      "get": {
+        "tags": [
+          "Operations about Webhooks"
+        ],
+        "summary": "get the webhook by organizationUuid",
+        "operationId": "getByOrganizationUuidUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "organizationUuid",
+            "in": "path",
+            "description": "organizationUuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseOk"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseConflict"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/webhooks/{uuid}": {
+      "get": {
+        "tags": [
+          "Operations about Webhooks"
+        ],
+        "summary": "Get the webhook by uuid",
+        "operationId": "getByUuidUsingGET_5",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "uuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseOk"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseConflict"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "put": {
+        "tags": [
+          "Operations about Webhooks"
+        ],
+        "summary": "Update the webhook",
+        "operationId": "updateUsingPUT_8",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "adminWebhookRequestModel",
+            "description": "adminWebhookRequestModel",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AdminWebhookRequestModel"
+            }
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "uuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseOk"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseConflict"
+            }
+          }
+        },
+        "deprecated": false
+      },
+      "delete": {
+        "tags": [
+          "Operations about Webhooks"
+        ],
+        "summary": "Delete the webhook",
+        "operationId": "deleteByUuidUsingDELETE",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "uuid",
+            "in": "path",
+            "description": "uuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseOk"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseConflict"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/v1/webhooks/{webhookUuid}/secret": {
+      "patch": {
+        "tags": [
+          "Operations about Webhooks"
+        ],
+        "summary": "Update secret by Uuid",
+        "operationId": "updateSecretByUuidUsingPATCH",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "X-AUTH-TOKEN",
+            "in": "header",
+            "description": "Organization specific token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "webhookUuid",
+            "in": "path",
+            "description": "webhookUuid",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseOk"
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "409": {
+            "description": "Conflict",
+            "schema": {
+              "$ref": "#/definitions/AssetDeleteResultResponseConflict"
             }
           }
         },
@@ -8937,24 +9191,6 @@
       },
       "title": "AdminCommonGCloudStorageProductAssetUploadSignUrlSessionRequest"
     },
-    "AdminCommonGCloudStorageProductGenerationRequestUploadSignUrlSessionRequest": {
-      "type": "object",
-      "properties": {
-        "clientUuid": {
-          "type": "string"
-        },
-        "productGenerationRequestUuid": {
-          "type": "string"
-        },
-        "requestUuid": {
-          "type": "string"
-        },
-        "resourceSettings": {
-          "$ref": "#/definitions/AdminCommonGCloudStorageResourceSettingsModel"
-        }
-      },
-      "title": "AdminCommonGCloudStorageProductGenerationRequestUploadSignUrlSessionRequest"
-    },
     "AdminCommonGCloudStorageResourceSettingsModel": {
       "type": "object",
       "properties": {
@@ -9049,6 +9285,15 @@
         "description": {
           "type": "string"
         },
+        "integrationAttributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
         "locationsUuids": {
           "type": "array",
           "items": {
@@ -9105,6 +9350,15 @@
         },
         "description": {
           "type": "string"
+        },
+        "integrationAttributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
         },
         "locationsUuids": {
           "type": "array",
@@ -9211,6 +9465,15 @@
         "description": {
           "type": "string"
         },
+        "integrationAttributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
         "locationsUuids": {
           "type": "array",
           "items": {
@@ -9273,6 +9536,15 @@
         },
         "description": {
           "type": "string"
+        },
+        "integrationAttributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
         },
         "locationsUuids": {
           "type": "array",
@@ -9506,6 +9778,24 @@
       },
       "title": "AdminCreateUserInvitationForOrganizationClientsRequest"
     },
+    "AdminEventRequestModel": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "AdminEventRequestModel"
+    },
     "AdminFindShowroomByFilterRequestModel": {
       "type": "object",
       "properties": {
@@ -9533,6 +9823,90 @@
     "AdminGetAllByStatusInvitationUserRequest": {
       "type": "object",
       "title": "AdminGetAllByStatusInvitationUserRequest"
+    },
+    "AdminGetUserByOrganizationModel": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "imageBlobId": {
+          "type": "string"
+        },
+        "isEmailVerified": {
+          "type": "boolean"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "SUPER_ADMIN",
+            "ORGANIZATION_OWNER",
+            "ORGANIZATION_ADMIN",
+            "ORGANIZATION_CLIENT_MEMBER",
+            "CLIENT_ORGANIZATION_ADMIN",
+            "CLIENT_ORGANIZATION_CONTENT_MANAGER",
+            "CLIENT_ORGANIZATION_VIEWER"
+          ]
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "AdminGetUserByOrganizationModel"
+    },
+    "AdminGetUserByOrganizationResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MISSING_CLIENT_NAME",
+              "MISSING_CLIENT_SLUG",
+              "MISSING_CLIENT",
+              "MISSING_FULL_NAME",
+              "MISSING_EMAIL",
+              "MISSING_PASSWORD",
+              "MISSING_ORGANIZATION",
+              "MISSING_UUID",
+              "MISSING_UUIDS",
+              "MISSING_USER_ROLE",
+              "NOT_FOUND_FOR_EMAIL",
+              "NOT_FOUND_FOR_ORGANIZATION",
+              "NOT_FOUND_FOR_CLIENT_ORGANIZATION",
+              "NOT_FOUND_FOR_USERS_UUIDS",
+              "NOT_FOUND_FOR_UUID",
+              "NOT_FOUND_FOR_ROLE",
+              "ORGANIZATION_NOT_FOUND",
+              "SIGN_UP_WITH_EXISTING_EMAIL",
+              "INVALID_EMAIL_FORMAT",
+              "USER_ALREADY_VERIFIED",
+              "MISSING_VERIFICATION_TOKEN",
+              "MISSING_RESET_PASSWORD_TOKEN",
+              "INVALID_RESET_PASSWORD_TOKEN",
+              "USER_NOT_FOUND",
+              "PASSWORD_MISMATCH",
+              "INVALID_VERIFICATION_TOKEN",
+              "ORGANIZATION_ROLE_CONFLICT",
+              "NOT_A_SUPER_ADMIN",
+              "MISSING_TOKEN",
+              "TOKEN_NOT_FOUND",
+              "INVALID_USER"
+            ]
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/AdminGetUserByOrganizationModel"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "AdminGetUserByOrganizationResponse"
     },
     "AdminInvitationGetByTokenResponse": {
       "type": "object",
@@ -9758,6 +10132,369 @@
         }
       },
       "title": "AdminSearchTagInOneClientRequestModel"
+    },
+    "AdminUserAccountDetailsModel": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "imageBlobId": {
+          "type": "string"
+        },
+        "isEmailVerified": {
+          "type": "boolean"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "AdminUserAccountDetailsModel"
+    },
+    "AdminUserAccountDetailsResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MISSING_CLIENT_NAME",
+              "MISSING_CLIENT_SLUG",
+              "MISSING_CLIENT",
+              "MISSING_FULL_NAME",
+              "MISSING_EMAIL",
+              "MISSING_PASSWORD",
+              "MISSING_ORGANIZATION",
+              "MISSING_UUID",
+              "MISSING_UUIDS",
+              "MISSING_USER_ROLE",
+              "NOT_FOUND_FOR_EMAIL",
+              "NOT_FOUND_FOR_ORGANIZATION",
+              "NOT_FOUND_FOR_CLIENT_ORGANIZATION",
+              "NOT_FOUND_FOR_USERS_UUIDS",
+              "NOT_FOUND_FOR_UUID",
+              "NOT_FOUND_FOR_ROLE",
+              "ORGANIZATION_NOT_FOUND",
+              "SIGN_UP_WITH_EXISTING_EMAIL",
+              "INVALID_EMAIL_FORMAT",
+              "USER_ALREADY_VERIFIED",
+              "MISSING_VERIFICATION_TOKEN",
+              "MISSING_RESET_PASSWORD_TOKEN",
+              "INVALID_RESET_PASSWORD_TOKEN",
+              "USER_NOT_FOUND",
+              "PASSWORD_MISMATCH",
+              "INVALID_VERIFICATION_TOKEN",
+              "ORGANIZATION_ROLE_CONFLICT",
+              "NOT_A_SUPER_ADMIN",
+              "MISSING_TOKEN",
+              "TOKEN_NOT_FOUND",
+              "INVALID_USER"
+            ]
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/AdminUserAccountDetailsModel"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "AdminUserAccountDetailsResponse"
+    },
+    "AdminWebhookRequestModel": {
+      "type": "object",
+      "properties": {
+        "clients": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "disable": {
+          "type": "boolean"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdminEventRequestModel"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "organizationUuid": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "userEmail": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "AdminWebhookRequestModel"
+    },
+    "AnalyticsMostViewedProductResponseModelCommon": {
+      "type": "object",
+      "properties": {
+        "avgNumInteractions": {
+          "type": "number",
+          "format": "double"
+        },
+        "productUuid": {
+          "type": "string"
+        },
+        "total3DViews": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalARViews": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "userEngagement": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "AnalyticsMostViewedProductResponseModelCommon"
+    },
+    "AnalyticsQueryRequestModelCommon": {
+      "type": "object",
+      "properties": {
+        "clientSlugs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "customVerticals": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "dateInterval": {
+          "type": "string"
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "eventActions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "eventCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "eventLabels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "organizationSlug": {
+          "type": "string"
+        },
+        "productUuids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "userAgent": {
+          "type": "string"
+        }
+      },
+      "title": "AnalyticsQueryRequestModelCommon"
+    },
+    "AnalyticsQueryResponseColumnHeaderModelCommon": {
+      "type": "object",
+      "properties": {
+        "columnType": {
+          "type": "string"
+        },
+        "dataType": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "title": "AnalyticsQueryResponseColumnHeaderModelCommon"
+    },
+    "AnalyticsQueryResponseCommon": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MISSING_ORGANIZATION_SLUG",
+              "MISSING_START_DATE",
+              "MISSING_END_DATE",
+              "MISSING_METRICS",
+              "MISSING_DIMENSIONS",
+              "INVALID_ORGANIZATION"
+            ]
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/AnalyticsQueryResponseModelCommon"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "AnalyticsQueryResponseCommon"
+    },
+    "AnalyticsQueryResponseModelCommon": {
+      "type": "object",
+      "properties": {
+        "columnHeaders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalyticsQueryResponseColumnHeaderModelCommon"
+          }
+        },
+        "containsSampleData": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "itemsPerPage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "profileInfo": {
+          "$ref": "#/definitions/AnalyticsQueryResponseProfileInfoCommon"
+        },
+        "query": {
+          "$ref": "#/definitions/AnalyticsQueryResponseQueryModelCommon"
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Map«string,string»"
+          }
+        },
+        "selfLink": {
+          "type": "string"
+        },
+        "totalForAllResult": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "totalResult": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "AnalyticsQueryResponseModelCommon"
+    },
+    "AnalyticsQueryResponseProfileInfoCommon": {
+      "type": "object",
+      "properties": {
+        "internalWebProperty": {
+          "type": "string"
+        },
+        "profileId": {
+          "type": "string"
+        },
+        "profileInfo": {
+          "type": "string"
+        },
+        "profileName": {
+          "type": "string"
+        },
+        "tableId": {
+          "type": "string"
+        },
+        "webPropertyId": {
+          "type": "string"
+        }
+      },
+      "title": "AnalyticsQueryResponseProfileInfoCommon"
+    },
+    "AnalyticsQueryResponseQueryModelCommon": {
+      "type": "object",
+      "properties": {
+        "dimensions": {
+          "type": "string"
+        },
+        "endDate": {
+          "type": "string"
+        },
+        "filters": {
+          "type": "string"
+        },
+        "ids": {
+          "type": "string"
+        },
+        "maxResult": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "samplingLevel": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string"
+        },
+        "startIndex": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "AnalyticsQueryResponseQueryModelCommon"
     },
     "AnnotationCreateResultResponseNotFound": {
       "type": "object",
@@ -10186,6 +10923,39 @@
       },
       "title": "AnnotationViewResponseModel"
     },
+    "AssetDeleteResultResponseConflict": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "description": "errors",
+          "items": {
+            "type": "string",
+            "enum": [
+              "PRODUCT_ASSET_CHANGE_IS_UNAVAILABLE"
+            ]
+          }
+        },
+        "success": {
+          "type": "boolean",
+          "example": false,
+          "description": "success"
+        }
+      },
+      "title": "AssetDeleteResultResponseConflict"
+    },
+    "AssetDeleteResultResponseOk": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "$ref": "#/definitions/EmptyResponseModel"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "AssetDeleteResultResponseOk"
+    },
     "AssetModel": {
       "type": "object",
       "properties": {
@@ -10206,7 +10976,8 @@
             "enum": [
               "GLB",
               "USDZ",
-              "OPTIMIZED"
+              "OPTIMIZED",
+              "FBX"
             ]
           }
         },
@@ -10548,7 +11319,8 @@
               "CLIENT_NOT_FOUND",
               "USER_NOT_FOUND",
               "ORGANIZATION_NOT_FOUND",
-              "MISSING_USER_UUID"
+              "MISSING_USER_UUID",
+              "IMAGE_NOT_FOUND"
             ]
           }
         },
@@ -10599,7 +11371,9 @@
               "ORGANIZATION_NOT_FOUND",
               "MISSING_UUID",
               "USER_NOT_FOUND",
-              "ORGANIZATION_INVITATION_NOT_FOUND"
+              "ORGANIZATION_INVITATION_NOT_FOUND",
+              "NAME_MAX_LENGTH_255",
+              "SLUG_MAX_LENGTH_255"
             ]
           }
         },
@@ -10630,7 +11404,8 @@
               "CLIENT_NOT_FOUND",
               "USER_NOT_FOUND",
               "ORGANIZATION_NOT_FOUND",
-              "MISSING_USER_UUID"
+              "MISSING_USER_UUID",
+              "IMAGE_NOT_FOUND"
             ]
           }
         },
@@ -11201,9 +11976,6 @@
         "name": {
           "type": "string"
         },
-        "organizationUuid": {
-          "type": "string"
-        },
         "slug": {
           "type": "string"
         }
@@ -11236,7 +12008,8 @@
               "CLIENT_NOT_FOUND",
               "USER_NOT_FOUND",
               "ORGANIZATION_NOT_FOUND",
-              "MISSING_USER_UUID"
+              "MISSING_USER_UUID",
+              "IMAGE_NOT_FOUND"
             ]
           }
         },
@@ -11622,7 +12395,8 @@
               "MISSING_SIZE",
               "USER_ACCESS_DENIED",
               "ALREADY_RESOLVED",
-              "MISSING_DELETE_PERMISSION"
+              "MISSING_DELETE_PERMISSION",
+              "ANNOTATION_DELETED"
             ]
           }
         },
@@ -11897,55 +12671,76 @@
       "type": "object",
       "title": "EmptyResponseModel"
     },
-    "FindProductGenerationRequestByFilterRequest": {
+    "EventGetAllResponse": {
       "type": "object",
       "properties": {
-        "clientUuid": {
-          "type": "string"
-        },
-        "notNullOriginalBlob": {
-          "type": "boolean"
-        },
-        "page": {
-          "type": "integer",
-          "format": "int32",
-          "example": 1,
-          "description": "1",
-          "minimum": 1,
-          "exclusiveMinimum": false,
-          "exclusiveMaximum": false
-        },
-        "size": {
-          "type": "integer",
-          "format": "int32",
-          "example": 1,
-          "description": "30",
-          "minimum": 1,
-          "exclusiveMinimum": false,
-          "exclusiveMaximum": false
-        },
-        "statuses": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "NO_FILE",
-              "PENDING",
-              "PROCESSING",
-              "PRODUCT_GENERATION",
-              "FAILED",
-              "SUCCESS"
-            ]
-          }
-        },
-        "uuids": {
+        "errors": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        "response": {
+          "$ref": "#/definitions/EventGridResponseModel"
+        },
+        "success": {
+          "type": "boolean"
         }
       },
-      "title": "FindProductGenerationRequestByFilterRequest"
+      "title": "EventGetAllResponse"
+    },
+    "EventGridResponseModel": {
+      "type": "object",
+      "properties": {
+        "grid": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventResponseModel"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "EventGridResponseModel"
+    },
+    "EventObjectModel": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "EventObjectModel"
+    },
+    "EventResponseModel": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventObjectModel"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "EventResponseModel"
     },
     "GCloudStorageResourceCreateBatchSignUrlSessionGridResponseModel": {
       "type": "object",
@@ -12755,7 +13550,8 @@
               "CLIENT_NOT_FOUND",
               "USER_NOT_FOUND",
               "ORGANIZATION_NOT_FOUND",
-              "MISSING_USER_UUID"
+              "MISSING_USER_UUID",
+              "IMAGE_NOT_FOUND"
             ]
           }
         },
@@ -12853,7 +13649,9 @@
               "ORGANIZATION_NOT_FOUND",
               "MISSING_UUID",
               "USER_NOT_FOUND",
-              "ORGANIZATION_INVITATION_NOT_FOUND"
+              "ORGANIZATION_INVITATION_NOT_FOUND",
+              "NAME_MAX_LENGTH_255",
+              "SLUG_MAX_LENGTH_255"
             ]
           }
         },
@@ -13125,7 +13923,8 @@
               "PRODUCT_NOT_FOUND",
               "PRODUCT_ALREADY_LIVE",
               "INVALID_PRODUCT_UUID",
-              "INVALID_TEXT_SIZE"
+              "INVALID_TEXT_SIZE",
+              "MISMATCH_HOTSPOT_TYPE"
             ]
           }
         },
@@ -13254,7 +14053,8 @@
               "PRODUCT_NOT_FOUND",
               "PRODUCT_ALREADY_LIVE",
               "INVALID_PRODUCT_UUID",
-              "INVALID_TEXT_SIZE"
+              "INVALID_TEXT_SIZE",
+              "MISMATCH_HOTSPOT_TYPE"
             ]
           }
         },
@@ -13413,7 +14213,8 @@
               "PRODUCT_NOT_FOUND",
               "PRODUCT_ALREADY_LIVE",
               "INVALID_PRODUCT_UUID",
-              "INVALID_TEXT_SIZE"
+              "INVALID_TEXT_SIZE",
+              "MISMATCH_HOTSPOT_TYPE"
             ]
           }
         },
@@ -13535,7 +14336,8 @@
               "PRODUCT_NOT_FOUND",
               "PRODUCT_ALREADY_LIVE",
               "INVALID_PRODUCT_UUID",
-              "INVALID_TEXT_SIZE"
+              "INVALID_TEXT_SIZE",
+              "MISMATCH_HOTSPOT_TYPE"
             ]
           }
         },
@@ -15211,7 +16013,8 @@
           "enum": [
             "GLB",
             "USDZ",
-            "OPTIMIZED"
+            "OPTIMIZED",
+            "FBX"
           ]
         },
         "conversionStatus": {
@@ -15723,6 +16526,10 @@
               "MISSING_PRODUCT_AUTO_PUBLISH_OPTION",
               "MISSING_PRODUCT_ASSET_DELETE_OPTION",
               "MISSING_MODEL_OPS_PARAMETERS",
+              "MISSING_TAG_UUID",
+              "INVALID_TAG_UUID",
+              "INVALID_LOCATION_UUID",
+              "MISSING_LOCATION_UUID",
               "INVALID_MODEL_OPS_PARAMETERS",
               "MISSING_MODEL",
               "PRODUCT_NOT_FOUND",
@@ -15746,7 +16553,15 @@
               "PRODUCT_NOT_UPDATABLE",
               "MISSING_UPDATED_BEFORE",
               "MISSING_REMOVED_BEFORE",
-              "INVALID_PRODUCTS_SIZE"
+              "MISSING_RENDERER_CONFIGS",
+              "INVALID_PRODUCTS_SIZE",
+              "THUMBNAIL_NOT_FOUND",
+              "PRODUCT_REVIEW_ACTION_NOT_ALLOWED",
+              "ATTRIBUTE_UPDATE_NOT_ALLOWED",
+              "INVALID_ATTRIBUTE_KEY",
+              "INVALID_INTEGRATION_ATTRIBUTE_KEY",
+              "INTEGRATION_ATTRIBUTES_UPDATE_NOT_ALLOWED",
+              "FACEBOOK_CONTENT_ID_UPDATE_NOT_ALLOWED"
             ]
           }
         },
@@ -15814,319 +16629,6 @@
       },
       "title": "ProductDeleteResultResponseUnprocessable"
     },
-    "ProductGenerationRequestCreateRequest": {
-      "type": "object",
-      "properties": {
-        "attributes": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "autoPublish": {
-          "type": "boolean"
-        },
-        "clientUuid": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "locationsUuids": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "modelOpsParameters": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          }
-        },
-        "name": {
-          "type": "string"
-        },
-        "pipelineUuid": {
-          "type": "string"
-        },
-        "presetUuid": {
-          "type": "string"
-        },
-        "tagsUuids": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "title": "ProductGenerationRequestCreateRequest"
-    },
-    "ProductGenerationRequestCreateResultResponse": {
-      "type": "object",
-      "properties": {
-        "errors": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "MISSING_NAME",
-              "MISSING_FILE_BLOB_ID",
-              "MISSING_CLIENT_UUID",
-              "MISSING_ORGANIZATION_UUID",
-              "NOT_FOUND",
-              "INVALID_PAGE",
-              "INVALID_SIZE",
-              "MISSING_PAGE",
-              "MISSING_SIZE",
-              "MISSING_UUID",
-              "MISSING_UUIDS",
-              "INVALID_UPDATE_STATUS_REQUEST",
-              "MISSING_PIPELINE",
-              "MISSING_MALWARE_STATUS",
-              "MISSING_STATUS",
-              "MISSING_MODEL_OPS_PARAMETERS",
-              "MISSING_ORIGINAL_BLOB",
-              "MISSING_ORIGINAL_BLOB_NAME",
-              "MISSING_ORIGINAL_BLOB_BLOB_ID",
-              "MISSING_ORIGINAL_BLOB_SIZE",
-              "MISSING_MODIFIER",
-              "SUBSCRIPTION_LIMIT_EXCEEDED",
-              "SUBSCRIPTION_NOT_FOUND"
-            ]
-          }
-        },
-        "response": {
-          "$ref": "#/definitions/ProductGenerationRequestCreateResultResponseModel"
-        },
-        "success": {
-          "type": "boolean"
-        }
-      },
-      "title": "ProductGenerationRequestCreateResultResponse"
-    },
-    "ProductGenerationRequestCreateResultResponseModel": {
-      "type": "object",
-      "properties": {
-        "uuid": {
-          "type": "string"
-        }
-      },
-      "title": "ProductGenerationRequestCreateResultResponseModel"
-    },
-    "ProductGenerationRequestErrorModel": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "description": {
-          "type": "string"
-        }
-      },
-      "title": "ProductGenerationRequestErrorModel"
-    },
-    "ProductGenerationRequestGetResultResponse": {
-      "type": "object",
-      "properties": {
-        "errors": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "MISSING_NAME",
-              "MISSING_FILE_BLOB_ID",
-              "MISSING_CLIENT_UUID",
-              "MISSING_ORGANIZATION_UUID",
-              "NOT_FOUND",
-              "INVALID_PAGE",
-              "INVALID_SIZE",
-              "MISSING_PAGE",
-              "MISSING_SIZE",
-              "MISSING_UUID",
-              "MISSING_UUIDS",
-              "INVALID_UPDATE_STATUS_REQUEST",
-              "MISSING_PIPELINE",
-              "MISSING_MALWARE_STATUS",
-              "MISSING_STATUS",
-              "MISSING_MODEL_OPS_PARAMETERS",
-              "MISSING_ORIGINAL_BLOB",
-              "MISSING_ORIGINAL_BLOB_NAME",
-              "MISSING_ORIGINAL_BLOB_BLOB_ID",
-              "MISSING_ORIGINAL_BLOB_SIZE",
-              "MISSING_MODIFIER",
-              "SUBSCRIPTION_LIMIT_EXCEEDED",
-              "SUBSCRIPTION_NOT_FOUND"
-            ]
-          }
-        },
-        "response": {
-          "$ref": "#/definitions/ProductGenerationRequestGetResultResponseModel"
-        },
-        "success": {
-          "type": "boolean"
-        }
-      },
-      "title": "ProductGenerationRequestGetResultResponse"
-    },
-    "ProductGenerationRequestGetResultResponseModel": {
-      "type": "object",
-      "properties": {
-        "clientUuid": {
-          "type": "string"
-        },
-        "created": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "error": {
-          "$ref": "#/definitions/ProductGenerationRequestErrorModel"
-        },
-        "items": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ProductGenerationRequestItemsModel"
-          }
-        },
-        "modelOpsParameters": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          }
-        },
-        "name": {
-          "type": "string"
-        },
-        "organizationUuid": {
-          "type": "string"
-        },
-        "originalBlob": {
-          "$ref": "#/definitions/ProductGenerationRequestOriginalBlobModel"
-        },
-        "pipelineUuid": {
-          "type": "string"
-        },
-        "presetUuid": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string",
-          "enum": [
-            "NO_FILE",
-            "PENDING",
-            "PROCESSING",
-            "PRODUCT_GENERATION",
-            "FAILED",
-            "SUCCESS"
-          ]
-        },
-        "updated": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "uuid": {
-          "type": "string"
-        }
-      },
-      "title": "ProductGenerationRequestGetResultResponseModel"
-    },
-    "ProductGenerationRequestItemsModel": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/ProductGenerationRequestErrorModel"
-        },
-        "name": {
-          "type": "string"
-        },
-        "originalBlobId": {
-          "type": "string"
-        }
-      },
-      "title": "ProductGenerationRequestItemsModel"
-    },
-    "ProductGenerationRequestOriginalBlobModel": {
-      "type": "object",
-      "properties": {
-        "assetOriginalSize": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "originalBlobId": {
-          "type": "string"
-        },
-        "originalBlobName": {
-          "type": "string"
-        }
-      },
-      "title": "ProductGenerationRequestOriginalBlobModel"
-    },
-    "ProductGenerationRequestSearchGridResponseModel": {
-      "type": "object",
-      "properties": {
-        "grid": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ProductGenerationRequestGetResultResponseModel"
-          }
-        },
-        "totalCount": {
-          "type": "integer",
-          "format": "int32"
-        }
-      },
-      "title": "ProductGenerationRequestSearchGridResponseModel"
-    },
-    "ProductGenerationRequestSearchResultResponse": {
-      "type": "object",
-      "properties": {
-        "errors": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "MISSING_NAME",
-              "MISSING_FILE_BLOB_ID",
-              "MISSING_CLIENT_UUID",
-              "MISSING_ORGANIZATION_UUID",
-              "NOT_FOUND",
-              "INVALID_PAGE",
-              "INVALID_SIZE",
-              "MISSING_PAGE",
-              "MISSING_SIZE",
-              "MISSING_UUID",
-              "MISSING_UUIDS",
-              "INVALID_UPDATE_STATUS_REQUEST",
-              "MISSING_PIPELINE",
-              "MISSING_MALWARE_STATUS",
-              "MISSING_STATUS",
-              "MISSING_MODEL_OPS_PARAMETERS",
-              "MISSING_ORIGINAL_BLOB",
-              "MISSING_ORIGINAL_BLOB_NAME",
-              "MISSING_ORIGINAL_BLOB_BLOB_ID",
-              "MISSING_ORIGINAL_BLOB_SIZE",
-              "MISSING_MODIFIER",
-              "SUBSCRIPTION_LIMIT_EXCEEDED",
-              "SUBSCRIPTION_NOT_FOUND"
-            ]
-          }
-        },
-        "response": {
-          "$ref": "#/definitions/ProductGenerationRequestSearchGridResponseModel"
-        },
-        "success": {
-          "type": "boolean"
-        }
-      },
-      "title": "ProductGenerationRequestSearchResultResponse"
-    },
     "ProductGetResponseModel": {
       "type": "object",
       "properties": {
@@ -16162,6 +16664,15 @@
         },
         "description": {
           "type": "string"
+        },
+        "integrationAttributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
         },
         "isUpdatable": {
           "type": "boolean"
@@ -16265,6 +16776,10 @@
               "MISSING_PRODUCT_AUTO_PUBLISH_OPTION",
               "MISSING_PRODUCT_ASSET_DELETE_OPTION",
               "MISSING_MODEL_OPS_PARAMETERS",
+              "MISSING_TAG_UUID",
+              "INVALID_TAG_UUID",
+              "INVALID_LOCATION_UUID",
+              "MISSING_LOCATION_UUID",
               "INVALID_MODEL_OPS_PARAMETERS",
               "MISSING_MODEL",
               "PRODUCT_NOT_FOUND",
@@ -16288,7 +16803,15 @@
               "PRODUCT_NOT_UPDATABLE",
               "MISSING_UPDATED_BEFORE",
               "MISSING_REMOVED_BEFORE",
-              "INVALID_PRODUCTS_SIZE"
+              "MISSING_RENDERER_CONFIGS",
+              "INVALID_PRODUCTS_SIZE",
+              "THUMBNAIL_NOT_FOUND",
+              "PRODUCT_REVIEW_ACTION_NOT_ALLOWED",
+              "ATTRIBUTE_UPDATE_NOT_ALLOWED",
+              "INVALID_ATTRIBUTE_KEY",
+              "INVALID_INTEGRATION_ATTRIBUTE_KEY",
+              "INTEGRATION_ATTRIBUTES_UPDATE_NOT_ALLOWED",
+              "FACEBOOK_CONTENT_ID_UPDATE_NOT_ALLOWED"
             ]
           }
         },
@@ -16410,6 +16933,10 @@
               "MISSING_PRODUCT_AUTO_PUBLISH_OPTION",
               "MISSING_PRODUCT_ASSET_DELETE_OPTION",
               "MISSING_MODEL_OPS_PARAMETERS",
+              "MISSING_TAG_UUID",
+              "INVALID_TAG_UUID",
+              "INVALID_LOCATION_UUID",
+              "MISSING_LOCATION_UUID",
               "INVALID_MODEL_OPS_PARAMETERS",
               "MISSING_MODEL",
               "PRODUCT_NOT_FOUND",
@@ -16433,7 +16960,15 @@
               "PRODUCT_NOT_UPDATABLE",
               "MISSING_UPDATED_BEFORE",
               "MISSING_REMOVED_BEFORE",
-              "INVALID_PRODUCTS_SIZE"
+              "MISSING_RENDERER_CONFIGS",
+              "INVALID_PRODUCTS_SIZE",
+              "THUMBNAIL_NOT_FOUND",
+              "PRODUCT_REVIEW_ACTION_NOT_ALLOWED",
+              "ATTRIBUTE_UPDATE_NOT_ALLOWED",
+              "INVALID_ATTRIBUTE_KEY",
+              "INVALID_INTEGRATION_ATTRIBUTE_KEY",
+              "INTEGRATION_ATTRIBUTES_UPDATE_NOT_ALLOWED",
+              "FACEBOOK_CONTENT_ID_UPDATE_NOT_ALLOWED"
             ]
           }
         },
@@ -16521,6 +17056,10 @@
               "MISSING_PRODUCT_AUTO_PUBLISH_OPTION",
               "MISSING_PRODUCT_ASSET_DELETE_OPTION",
               "MISSING_MODEL_OPS_PARAMETERS",
+              "MISSING_TAG_UUID",
+              "INVALID_TAG_UUID",
+              "INVALID_LOCATION_UUID",
+              "MISSING_LOCATION_UUID",
               "INVALID_MODEL_OPS_PARAMETERS",
               "MISSING_MODEL",
               "PRODUCT_NOT_FOUND",
@@ -16544,7 +17083,15 @@
               "PRODUCT_NOT_UPDATABLE",
               "MISSING_UPDATED_BEFORE",
               "MISSING_REMOVED_BEFORE",
-              "INVALID_PRODUCTS_SIZE"
+              "MISSING_RENDERER_CONFIGS",
+              "INVALID_PRODUCTS_SIZE",
+              "THUMBNAIL_NOT_FOUND",
+              "PRODUCT_REVIEW_ACTION_NOT_ALLOWED",
+              "ATTRIBUTE_UPDATE_NOT_ALLOWED",
+              "INVALID_ATTRIBUTE_KEY",
+              "INVALID_INTEGRATION_ATTRIBUTE_KEY",
+              "INTEGRATION_ATTRIBUTES_UPDATE_NOT_ALLOWED",
+              "FACEBOOK_CONTENT_ID_UPDATE_NOT_ALLOWED"
             ]
           }
         },
@@ -16712,7 +17259,9 @@
               "INVALID_VARIANT_GROUP_UUID",
               "MISSING_ORGANIZATION_UUID",
               "MISSING_ORGANIZATION_SLUG",
-              "PRODUCT_NOT_FOUND"
+              "PRODUCT_NOT_FOUND",
+              "INVALID_PAGE",
+              "INVALID_SIZE"
             ]
           }
         },
@@ -16858,6 +17407,10 @@
               "MISSING_PRODUCT_AUTO_PUBLISH_OPTION",
               "MISSING_PRODUCT_ASSET_DELETE_OPTION",
               "MISSING_MODEL_OPS_PARAMETERS",
+              "MISSING_TAG_UUID",
+              "INVALID_TAG_UUID",
+              "INVALID_LOCATION_UUID",
+              "MISSING_LOCATION_UUID",
               "INVALID_MODEL_OPS_PARAMETERS",
               "MISSING_MODEL",
               "PRODUCT_NOT_FOUND",
@@ -16881,7 +17434,15 @@
               "PRODUCT_NOT_UPDATABLE",
               "MISSING_UPDATED_BEFORE",
               "MISSING_REMOVED_BEFORE",
-              "INVALID_PRODUCTS_SIZE"
+              "MISSING_RENDERER_CONFIGS",
+              "INVALID_PRODUCTS_SIZE",
+              "THUMBNAIL_NOT_FOUND",
+              "PRODUCT_REVIEW_ACTION_NOT_ALLOWED",
+              "ATTRIBUTE_UPDATE_NOT_ALLOWED",
+              "INVALID_ATTRIBUTE_KEY",
+              "INVALID_INTEGRATION_ATTRIBUTE_KEY",
+              "INTEGRATION_ATTRIBUTES_UPDATE_NOT_ALLOWED",
+              "FACEBOOK_CONTENT_ID_UPDATE_NOT_ALLOWED"
             ]
           }
         },
@@ -17175,6 +17736,10 @@
               "MISSING_PRODUCT_AUTO_PUBLISH_OPTION",
               "MISSING_PRODUCT_ASSET_DELETE_OPTION",
               "MISSING_MODEL_OPS_PARAMETERS",
+              "MISSING_TAG_UUID",
+              "INVALID_TAG_UUID",
+              "INVALID_LOCATION_UUID",
+              "MISSING_LOCATION_UUID",
               "INVALID_MODEL_OPS_PARAMETERS",
               "MISSING_MODEL",
               "PRODUCT_NOT_FOUND",
@@ -17198,7 +17763,15 @@
               "PRODUCT_NOT_UPDATABLE",
               "MISSING_UPDATED_BEFORE",
               "MISSING_REMOVED_BEFORE",
-              "INVALID_PRODUCTS_SIZE"
+              "MISSING_RENDERER_CONFIGS",
+              "INVALID_PRODUCTS_SIZE",
+              "THUMBNAIL_NOT_FOUND",
+              "PRODUCT_REVIEW_ACTION_NOT_ALLOWED",
+              "ATTRIBUTE_UPDATE_NOT_ALLOWED",
+              "INVALID_ATTRIBUTE_KEY",
+              "INVALID_INTEGRATION_ATTRIBUTE_KEY",
+              "INTEGRATION_ATTRIBUTES_UPDATE_NOT_ALLOWED",
+              "FACEBOOK_CONTENT_ID_UPDATE_NOT_ALLOWED"
             ]
           }
         },
@@ -17572,7 +18145,8 @@
               "MISSING_SIZE",
               "USER_ACCESS_DENIED",
               "ALREADY_RESOLVED",
-              "MISSING_DELETE_PERMISSION"
+              "MISSING_DELETE_PERMISSION",
+              "ANNOTATION_DELETED"
             ]
           }
         },
@@ -17756,7 +18330,8 @@
           "items": {
             "type": "string",
             "enum": [
-              "MISSING_CLIENT_UUID"
+              "MISSING_CLIENT_UUID",
+              "INVALID_SEARCH_TERM_SIZE"
             ]
           }
         },
@@ -17829,6 +18404,7 @@
           "items": {
             "type": "string",
             "enum": [
+              "INVALID_SEARCH_TERM_SIZE",
               "MISSING_CLIENT_UUID",
               "MISSING_ORGANIZATION_UUID"
             ]
@@ -18357,7 +18933,8 @@
           "enum": [
             "GLB",
             "USDZ",
-            "OPTIMIZED"
+            "OPTIMIZED",
+            "FBX"
           ]
         },
         "conversionStatus": {
@@ -19525,7 +20102,8 @@
               "CLIENT_NOT_FOUND",
               "USER_NOT_FOUND",
               "ORGANIZATION_NOT_FOUND",
-              "MISSING_USER_UUID"
+              "MISSING_USER_UUID",
+              "IMAGE_NOT_FOUND"
             ]
           }
         },
@@ -19855,7 +20433,8 @@
               "CLIENT_NOT_FOUND",
               "USER_NOT_FOUND",
               "ORGANIZATION_NOT_FOUND",
-              "MISSING_USER_UUID"
+              "MISSING_USER_UUID",
+              "IMAGE_NOT_FOUND"
             ]
           }
         },
@@ -19885,7 +20464,9 @@
               "ORGANIZATION_NOT_FOUND",
               "MISSING_UUID",
               "USER_NOT_FOUND",
-              "ORGANIZATION_INVITATION_NOT_FOUND"
+              "ORGANIZATION_INVITATION_NOT_FOUND",
+              "NAME_MAX_LENGTH_255",
+              "SLUG_MAX_LENGTH_255"
             ]
           }
         },
@@ -20341,6 +20922,82 @@
       },
       "title": "VariantGroupGridSearchResponseModel"
     },
+    "VariantGroupSearchRequest": {
+      "type": "object",
+      "properties": {
+        "clientUuids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "organizationUuid": {
+          "type": "string"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "1",
+          "minimum": 1,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "productName": {
+          "type": "string"
+        },
+        "productsUuids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "searchTerm": {
+          "type": "string"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "example": 1,
+          "description": "30",
+          "minimum": 1,
+          "exclusiveMinimum": false,
+          "exclusiveMaximum": false
+        },
+        "sorts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "LIVE"
+            ]
+          }
+        },
+        "tagName": {
+          "type": "string"
+        },
+        "tagsUuids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "title": "VariantGroupSearchRequest"
+    },
     "VariantGroupSearchResponse": {
       "type": "object",
       "properties": {
@@ -20734,6 +21391,105 @@
           "title": "VideoHotspotResponseModel"
         }
       ]
+    },
+    "WebHookResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/WebhookResponseModel"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "WebHookResponse"
+    },
+    "WebhookGetAllResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/WebhookGridResponseModel"
+        },
+        "success": {
+          "type": "boolean"
+        }
+      },
+      "title": "WebhookGetAllResponse"
+    },
+    "WebhookGridResponseModel": {
+      "type": "object",
+      "properties": {
+        "grid": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WebhookResponseModel"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "WebhookGridResponseModel"
+    },
+    "WebhookResponseModel": {
+      "type": "object",
+      "properties": {
+        "clients": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "disable": {
+          "type": "boolean"
+        },
+        "events": {
+          "$ref": "#/definitions/EventGridResponseModel"
+        },
+        "name": {
+          "type": "string"
+        },
+        "organizationUuid": {
+          "type": "string"
+        },
+        "secret": {
+          "type": "string"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string"
+        },
+        "userEmail": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        }
+      },
+      "title": "WebhookResponseModel"
     }
   }
 }
