@@ -262,5 +262,7 @@ function deleteComment(uuid) {
 function displayErrorMessage() {
     let messageElement = document.querySelector('#message');
     messageElement.style.display = 'block';
+    let errorElement = document.querySelector('#error');
+    errorElement.textContent = 'Bummer. An error happened while loading the model.'
 }
 
