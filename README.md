@@ -169,6 +169,39 @@ UI actions corresponding to the Automation operations are included into the plug
 
 ![UI Published Model Actions Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/published_asset_actions.png)
 
+### Vnatana Viewer
+Vntana provides a reusable [3D viewer JS component](https://www.vntana.com/resource/3d-webviewer-js-component/) that can be used to preview GLB files stored in Nuxeo. This viewer relies on the open source [google viewer](https://modelviewer.dev/) and adds a layer of optimization. 
+However, the JS component cannot be used directly into a webui components because of conflicting dependencies. So instead this plugin includes a [simple web page](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/blob/master/nuxeo-vntana-connector-webui/src/main/resources/web/nuxeo.war/ui/nuxeo-vntana/frame/nuxeo-vntana-viewer-frame.html) that loads the viewer and can be embedded as an iframe into a webcomponent.
+
+Below is an example of how to use the iframe with a document that holds a GLB file 
+
+```js
+<iframe src="[[_getFrameUrl(document)]]" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" onmousewheel=""></iframe>
+
+_getSource: function(document) {
+    return document ? document.properties['file:content'].data : null;
+},
+
+_getThumbnail: function(document) {
+    if (document && document.properties['thumb:thumbnail'] && document.properties['thumb:thumbnail'].data) {
+        return document.properties['thumb:thumbnail'].data;
+    } else {
+        return undefined;
+    }
+},
+
+_getFrameUrl: function(document) {
+    return `/nuxeo/ui/nuxeo-vntana/frame/nuxeo-vntana-viewer-frame.html?blobUrl=${encodeURIComponent(this._getSource(document))}&thumbnailUrl=${this._getThumbnail(document)}`;
+}
+```
+
+### Vnatana Annotations
+Vntana also provides an open source JS component for 3D annotations. The component provides several [JS callbacks that are leveraged](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/blob/master/nuxeo-vntana-connector-annotation/src/index.js) to plug it with the [comment and annotation API](https://doc.nuxeo.com/nxdoc/comments/) of the Nuxeo Platform such that the annotations are stored in the Nuxeo Platform.
+As for the viewer, the annotation feature is packaged as a web page that can be embedded as an iframe. A [document tab](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/blob/master/nuxeo-vntana-connector-webui/src/main/resources/web/nuxeo.war/ui/nuxeo-vntana/tab/nuxeo-vntana-3d-annotation-tab.html) is included.
+
+![UI Published Model Actions Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/annotations.png)
+
+
 ## Webhooks
 This plugin implements an endpoint to receive [events from Vntana](https://www.vntana.com/resource/webhooks/). The callback URL is `https://myserver/nuxeo/site/vntana/event`. The endpoint will generate a `vntanaEvent` event in Nuxeo that can be catched with event listeners in java or event handlers in Nuxeo Studio. Below is a sample automation script triggered by event handler:
 
