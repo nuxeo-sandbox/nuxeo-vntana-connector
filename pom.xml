@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.nuxeo</groupId>
     <artifactId>nuxeo-parent</artifactId>
-    <version>2021.34</version>
+    <version>2023.0</version>
   </parent>
 
   <groupId>org.nuxeo.labs.vntana</groupId>
   <artifactId>nuxeo-vntana-connector-parent</artifactId>
-  <version>2021.9.0-SNAPSHOT</version>
+  <version>2023.0.0-SNAPSHOT</version>
   <name>Nuxeo vntana connector parent</name>
   <description>A connector between Vntana and the Nuxeo Platform</description>
   <packaging>pom</packaging>
@@ -17,7 +17,7 @@
   <properties>
     <!-- Skip Nuxeo enforcer rules by default -->
     <nuxeo.skip.enforcer>true</nuxeo.skip.enforcer>
-    <nuxeo.target.version>2021.*</nuxeo.target.version>
+    <nuxeo.target.version>2023.*</nuxeo.target.version>
     <skipDocker>false</skipDocker>
   </properties>
 
@@ -63,6 +63,7 @@
       <dependency>
         <groupId>org.nuxeo.labs.vntana</groupId>
         <artifactId>nuxeo-vntana-connector-package</artifactId>
+        <type>pom</type>
         <version>${project.version}</version>
       </dependency>
       <dependency>

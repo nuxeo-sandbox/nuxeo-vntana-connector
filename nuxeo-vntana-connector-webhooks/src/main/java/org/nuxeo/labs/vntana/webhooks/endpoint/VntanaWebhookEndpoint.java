@@ -38,8 +38,8 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.util.buf.HexUtils;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.event.impl.EventContextImpl;
@@ -59,7 +59,7 @@ import org.nuxeo.runtime.api.Framework;
 @Consumes({ MediaType.APPLICATION_JSON })
 public class VntanaWebhookEndpoint extends ModuleRoot {
 
-    protected static final Log log = LogFactory.getLog(VntanaWebhookEndpoint.class);
+    private static final Logger log = LogManager.getLogger(VntanaWebhookEndpoint.class);
 
     // The Signature and Timestamp will be used to verify the request was made by VNTANA
     public static final String HEADER_VNTANA_SIGNATURE = "X-VNTANA-SIGNATURE";
