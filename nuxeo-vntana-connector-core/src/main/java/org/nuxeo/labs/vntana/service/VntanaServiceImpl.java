@@ -15,6 +15,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CloseableFile;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -58,6 +60,8 @@ import org.nuxeo.labs.vntana.client.model.ProductGetResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.UserOrganizationResultResponseOk;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.DefaultComponent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -65,6 +69,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class VntanaServiceImpl extends DefaultComponent implements VntanaService {
+
+    private static final Logger log = LogManager.getLogger(VntanaServiceImpl.class);
 
     public static final String VNTANA_API_TOKEN = "vntana.api.key";
 
@@ -423,6 +429,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         VntanaAdapter adapter = getAdapter(doc);
         ProductGetResponseModel productModel = getProduct(doc.getAdapter(VntanaAdapter.class));
         String thumbnailBlobId = productModel.getAsset().getThumbnailBlobId();
+
+        if (thumbnailBlobId == null) {
+            log.debug(String.format("No Thumbnail ID for vntana product %s in doc %s",productModel.getUuid(),doc.getId()));
+            return null;
+        }
+
         String organizationToken = getOrganizationToken(adapter.getOrganizationUUID());
         try (Response response = new OperationsAboutProductsApi().loadProductThumbnailResourceUsingGETCall(
                         organizationToken, adapter.getClientUUID(), adapter.getProductUUID(),thumbnailBlobId, null,null,null).execute()) {
