@@ -195,13 +195,6 @@ _getFrameUrl: function(document) {
 }
 ```
 
-### Vnatana Annotations
-Vntana also provides an open source JS component for 3D annotations. The component provides several [JS callbacks that are leveraged](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/blob/master/nuxeo-vntana-connector-annotation/src/index.js) to plug it with the [comment and annotation API](https://doc.nuxeo.com/nxdoc/comments/) of the Nuxeo Platform such that the annotations are stored in the Nuxeo Platform.
-As for the viewer, the annotation feature is packaged as a web page that can be embedded as an iframe. A [document tab](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/blob/master/nuxeo-vntana-connector-webui/src/main/resources/web/nuxeo.war/ui/nuxeo-vntana/tab/nuxeo-vntana-3d-annotation-tab.html) is included.
-
-![UI Published Model Actions Screenshot](https://github.com/nuxeo-sandbox/nuxeo-vntana-connector/raw/master/documentation_assets/annotations.png)
-
-
 ## Webhooks
 This plugin implements an endpoint to receive [events from Vntana](https://www.vntana.com/resource/webhooks/). The callback URL is `https://myserver/nuxeo/site/vntana/event`. The endpoint will generate a `vntanaEvent` event in Nuxeo that can be catched with event listeners in java or event handlers in Nuxeo Studio. Below is a sample automation script triggered by event handler:
 
