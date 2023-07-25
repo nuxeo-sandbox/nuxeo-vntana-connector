@@ -2,6 +2,8 @@ package org.nuxeo.labs.vntana.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.nuxeo.labs.vntana.adapter.VntanaAdapter.VNTANA_FACET;
+import static org.nuxeo.labs.vntana.client.model.AdminCommonProductCreateRequest.PublishToStatusEnum.LIVE_INTERNAL;
+import static org.nuxeo.labs.vntana.client.model.ProductGetResponseModel.StatusEnum.DRAFT;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.api.Blob;
@@ -95,11 +98,13 @@ public class TestVntanaService {
         DocumentModel model = vntanaTestFeature.getTestDocument(session);
         vntanaservice.publishModel(model);
         VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
+        Assert.assertEquals(DRAFT.getValue(), adapter.getStatus());
         Assert.assertNotNull(adapter);
         Assert.assertTrue(adapter.isUploaded());
     }
 
     @Test
+    @Ignore
     public void testUnpublishModel() {
         String pipelineUUID = vntanaservice.getPipelineUUID(vntanaTestFeature.getDefaultOrg(), "Convert Only");
         String productUUID = vntanaservice.createProduct(

@@ -1,6 +1,8 @@
 package org.nuxeo.labs.vntana.service;
 
 import static org.nuxeo.labs.vntana.adapter.VntanaAdapter.VNTANA_FACET;
+import static org.nuxeo.labs.vntana.client.model.ProductGetResponseModel.ConversionStatusEnum.PENDING;
+import static org.nuxeo.labs.vntana.client.model.ProductGetResponseModel.StatusEnum.DRAFT;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CloseableFile;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -31,37 +33,35 @@ import org.nuxeo.labs.vntana.adapter.VntanaAdapter;
 import org.nuxeo.labs.vntana.adapter.VntanaProductReference;
 import org.nuxeo.labs.vntana.client.ApiClient;
 import org.nuxeo.labs.vntana.client.ApiException;
-import org.nuxeo.labs.vntana.client.api.OperationsAboutClientsApi;
-import org.nuxeo.labs.vntana.client.api.OperationsAboutFilesUploadApi;
-import org.nuxeo.labs.vntana.client.api.OperationsAboutOrganizationsApi;
-import org.nuxeo.labs.vntana.client.api.OperationsAboutPipelinesApi;
-import org.nuxeo.labs.vntana.client.api.OperationsAboutProductsApi;
+import org.nuxeo.labs.vntana.client.api.ClientsApi;
+import org.nuxeo.labs.vntana.client.api.OrganizationsApi;
+import org.nuxeo.labs.vntana.client.api.PipelinesApi;
+import org.nuxeo.labs.vntana.client.api.ProductsApi;
+import org.nuxeo.labs.vntana.client.api.UploadApi;
 import org.nuxeo.labs.vntana.client.model.AdminCommonGCloudStorageProductAssetUploadSignUrlSessionRequest;
 import org.nuxeo.labs.vntana.client.model.AdminCommonGCloudStorageResourceSettingsModel;
 import org.nuxeo.labs.vntana.client.model.AdminCommonProductCreateRequest;
-import org.nuxeo.labs.vntana.client.model.AdminCommonProductDeleteRequest;
-import org.nuxeo.labs.vntana.client.model.ClientGetResultResponseOk;
-import org.nuxeo.labs.vntana.client.model.ClientOrganizationResultResponseOk;
-import org.nuxeo.labs.vntana.client.model.GCloudStorageResourceCreateSignUrlSessionResponseOk;
+import org.nuxeo.labs.vntana.client.model.AdminCommonProductHardDeleteRequest;
+import org.nuxeo.labs.vntana.client.model.GCloudStorageResourceCreateSignUrlSessionResponse;
 import org.nuxeo.labs.vntana.client.model.GetClientOrganizationResponseModel;
+import org.nuxeo.labs.vntana.client.model.GetClientOrganizationResultResponse;
 import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResponseModel;
+import org.nuxeo.labs.vntana.client.model.GetOrganizationByUuidResultResponse;
 import org.nuxeo.labs.vntana.client.model.GetUserClientOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.GetUserOrganizationsResponseModel;
 import org.nuxeo.labs.vntana.client.model.Model;
 import org.nuxeo.labs.vntana.client.model.ModelOpsParameters;
-import org.nuxeo.labs.vntana.client.model.OrganizationGetResultResponseOk;
-import org.nuxeo.labs.vntana.client.model.PipelinesGetPipelinesResultResponseOk;
+import org.nuxeo.labs.vntana.client.model.PipelinesResultResponse;
 import org.nuxeo.labs.vntana.client.model.ProductCreateResponseModel;
 import org.nuxeo.labs.vntana.client.model.ProductCreateResultResponseOk;
-import org.nuxeo.labs.vntana.client.model.ProductDeleteResponseModel;
-import org.nuxeo.labs.vntana.client.model.ProductDeleteResultResponseOk;
 import org.nuxeo.labs.vntana.client.model.ProductGetResponseModel;
 import org.nuxeo.labs.vntana.client.model.ProductGetResultResponseOk;
-import org.nuxeo.labs.vntana.client.model.UserOrganizationResultResponseOk;
+import org.nuxeo.labs.vntana.client.model.ProductHardDeleteResponseModel;
+import org.nuxeo.labs.vntana.client.model.ProductHardDeleteResultResponseOk;
+import org.nuxeo.labs.vntana.client.model.UserClientOrganizationResponse;
+import org.nuxeo.labs.vntana.client.model.UserOrganizationResponse;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.DefaultComponent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -115,6 +115,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         return result;
     }
 
+    public ApiClient getApiClient(String token) {
+        ApiClient client = getApiClient();
+        client.setApiKey(token);
+        return client;
+    }
+
     @Override
     public void setApiClient(ApiClient client) {
         this.client = client;
@@ -135,12 +141,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public List<GetUserOrganizationsResponseModel> getOrganizations() {
         String apiToken = getApiToken();
         try {
-            UserOrganizationResultResponseOk response = new OperationsAboutOrganizationsApi(
-                    getApiClient()).getUserOrganizationsUsingGET(apiToken);
+            UserOrganizationResponse response = new OrganizationsApi(
+                    getApiClient(apiToken)).getUserOrganizations();
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse().getGrid();
             } else {
-                throw new NuxeoException("Could not get the list of organizations");
+                throw new NuxeoException(String.format("Could not get the list of organizations, %s", response.getErrors()));
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not get the list of organizations", e);
@@ -151,12 +157,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public GetOrganizationByUuidResponseModel getOrganization(String organizationUUID) {
         String organizationToken = getOrganizationToken(organizationUUID);
         try {
-            OrganizationGetResultResponseOk response = new OperationsAboutOrganizationsApi(
-                    getApiClient()).getCurrentOrganizationUsingGET(organizationToken);
+            GetOrganizationByUuidResultResponse response = new OrganizationsApi(
+                    getApiClient(organizationToken)).getCurrentOrganization();
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
             } else {
-                throw new NuxeoException("Could not get organization " + organizationUUID);
+                throw new NuxeoException(String.format("Could not get organization %s, %s", organizationUUID, response.getErrors()));
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not get organization " + organizationUUID, e);
@@ -167,13 +173,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public List<GetUserClientOrganizationsResponseModel> getClients(String organizationID) {
         try {
             String organizationToken = getOrganizationToken(organizationID);
-            ClientOrganizationResultResponseOk response = new OperationsAboutClientsApi(
-                    getApiClient()).getClientOrganizationsUsingGET(organizationToken);
-
+            UserClientOrganizationResponse response = new ClientsApi(
+                    getApiClient(organizationToken)).getClientOrganizations();
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse().getGrid();
             } else {
-                throw new NuxeoException("Could not get the list of clients");
+                throw new NuxeoException(String.format("Could not get the list of clients, %s", response.getErrors()));
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not get the list of clients", e);
@@ -184,13 +189,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public GetClientOrganizationResponseModel getClient(String organizationUUID, String clientUUID) {
         try {
             String organizationToken = getOrganizationToken(organizationUUID);
-            ClientGetResultResponseOk response = new OperationsAboutClientsApi(getApiClient()).getByUuidUsingGET(
-                    organizationToken, clientUUID);
+            GetClientOrganizationResultResponse response = new ClientsApi(getApiClient(organizationToken)).getClient(clientUUID);
 
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
             } else {
-                throw new NuxeoException("Could not get client " + clientUUID);
+                throw new NuxeoException(String.format("Could not get client %s, %s",clientUUID, response.getErrors()));
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not get client " + clientUUID, e);
@@ -201,12 +205,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public ProductGetResponseModel getProduct(VntanaProductReference productRef) {
         String organizationToken = getOrganizationToken(productRef.getOrganizationUUID());
         try {
-            ProductGetResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).getByUuidUsingGET3(
-                    organizationToken, productRef.getProductUUID());
+            ProductGetResultResponseOk response = new ProductsApi(getApiClient(organizationToken))
+                    .getByUuid(productRef.getProductUUID());
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
             } else {
-                throw new NuxeoException("Could not fetch product: " + productRef.getProductUUID());
+                throw new NuxeoException(String.format("Could not fetch product: %s, %s", productRef.getProductUUID(), response.getErrors()));
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not fetch product: " + productRef.getProductUUID(), e);
@@ -217,12 +221,11 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
     public List<Map<String, String>> getPipelines(String organizationId) {
         String organizationToken = getOrganizationToken(organizationId);
         try {
-            PipelinesGetPipelinesResultResponseOk response = new OperationsAboutPipelinesApi(
-                    getApiClient()).getPipelinesUsingGET(organizationToken);
+            PipelinesResultResponse response = new PipelinesApi(getApiClient(organizationToken)).getPipelines();
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse().getPipelines();
             } else {
-                throw new NuxeoException("Could not fetch pipelines for org: " + organizationId);
+                throw new NuxeoException(String.format("Could not fetch pipelines for org: %s, %s", organizationId, response.getErrors()));
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not fetch pipelines for org: " + organizationId, e);
@@ -249,19 +252,19 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         AdminCommonProductCreateRequest productCreateRequest = new AdminCommonProductCreateRequest();
         productCreateRequest.setClientUuid(clientUUID);
         productCreateRequest.setName(name);
-        productCreateRequest.setAutoPublish(false);
         productCreateRequest.setPipelineUuid(pipelineUUID);
         productCreateRequest.setModelOpsParameters(parameters.toMap());
         productCreateRequest.setAttributes(attributes);
+        productCreateRequest.setPublishToStatus(AdminCommonProductCreateRequest.PublishToStatusEnum.LIVE_INTERNAL);
 
         try {
             String organizationToken = getOrganizationToken(organizationUUID);
-            ProductCreateResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).createUsingPOST4(
-                    organizationToken, productCreateRequest);
+            ProductCreateResultResponseOk response = new ProductsApi(getApiClient(organizationToken))
+                    .createProduct(productCreateRequest);
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
             } else {
-                throw new NuxeoException("Could not create product");
+                throw new NuxeoException(String.format("Could not create product, %s",response.getErrors())) ;
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not create product", e);
@@ -280,8 +283,8 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         resourceSettings.setOriginalName(blob.getFilename());
         resourceSettings.setOriginalSize(blob.getLength());
         urlRequest.setResourceSettings(resourceSettings);
-        GCloudStorageResourceCreateSignUrlSessionResponseOk urlResponse = new OperationsAboutFilesUploadApi(
-                getApiClient()).createClientProductAssetUploadSignUrlSessionUsingPOST(organizationToken, urlRequest);
+        GCloudStorageResourceCreateSignUrlSessionResponse urlResponse = new UploadApi(
+                getApiClient(organizationToken)).createClientProductAssetUploadSignUrlSession(urlRequest);
         location = urlResponse.getResponse().getLocation();
 
         ApiClient client = getApiClient();
@@ -297,17 +300,17 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         }
     }
 
-    public ProductDeleteResponseModel deleteProduct(String organizationUUID, String productUUID) {
-        AdminCommonProductDeleteRequest productDeleteRequest = new AdminCommonProductDeleteRequest();
-        productDeleteRequest.addUuidsItem(productUUID);
+    public ProductHardDeleteResponseModel deleteProduct(String organizationUUID, String productUUID) {
+        AdminCommonProductHardDeleteRequest productDeleteRequest = new AdminCommonProductHardDeleteRequest();
+        productDeleteRequest.setUuid(productUUID);
         try {
             String organizationToken = getOrganizationToken(organizationUUID);
-            ProductDeleteResultResponseOk response = new OperationsAboutProductsApi(getApiClient()).deleteUsingDELETE4(
-                    organizationToken, productDeleteRequest);
+            ProductHardDeleteResultResponseOk response = new ProductsApi(getApiClient(organizationToken))
+                    .hardDelete(productDeleteRequest);
             if (Boolean.TRUE.equals(response.getSuccess())) {
                 return response.getResponse();
             } else {
-                throw new NuxeoException("Could not delete product " + productUUID);
+                throw new NuxeoException(String.format("Could not delete product %s, %s",productUUID,response.getErrors())) ;
             }
         } catch (ApiException e) {
             throw new NuxeoException("Could not delete product " + productUUID, e);
@@ -356,8 +359,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         try {
             Blob blob = vntanaAdapter.getOriginalBlob();
             if (upload(vntanaAdapter, blob)) {
-                vntanaAdapter.setSourceDigest(blob.getDigest()).setUploadSuccessful();
-                updateModelRemoteProcessingStatus(vntanaAdapter);
+                vntanaAdapter.setSourceDigest(blob.getDigest()).setUploadSuccessful().setStatus(DRAFT.getValue()).setConversionStatus(PENDING.getValue());
             } else {
                 vntanaAdapter.setUploadFailed();
             }
@@ -411,13 +413,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         VntanaAdapter adapter = doc.getAdapter(VntanaAdapter.class);
         String organizationToken = getOrganizationToken(adapter.getOrganizationUUID());
 
-        try (Response response = new OperationsAboutProductsApi().loadProductAssetModelResourceUsingGETCall(
-                organizationToken, adapter.getClientUUID(), format.getValue(), adapter.getProductUUID(), null)
-                                                                 .execute()) {
+        try (Response response = new ProductsApi(getApiClient(organizationToken)).downloadModelCall(
+                adapter.getProductUUID(), format.getValue(), adapter.getClientUUID(), null).execute()) {
             if (response.isSuccessful()) {
                 return downloadFile(response);
             } else {
-                throw new NuxeoException("Failed to download");
+                throw new NuxeoException(String.format("Failed to download format %s for doc %s: %s",format.getValue(), doc.getId(), response));
             }
         } catch (IOException | ApiException e) {
             throw new NuxeoException("Failed to download", e);
@@ -436,12 +437,13 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         }
 
         String organizationToken = getOrganizationToken(adapter.getOrganizationUUID());
-        try (Response response = new OperationsAboutProductsApi().loadProductThumbnailResourceUsingGETCall(
-                        organizationToken, adapter.getClientUUID(), adapter.getProductUUID(),thumbnailBlobId, null,null,null).execute()) {
+
+        try (Response response = new ProductsApi(getApiClient(organizationToken)).downloadThumbnailCall(
+                adapter.getProductUUID(), adapter.getClientUUID(),thumbnailBlobId, null,null,true, null).execute()) {
             if (response.isSuccessful()) {
                 return downloadFile(response);
             } else {
-                throw new NuxeoException("Failed to download");
+                throw new NuxeoException(String.format("Failed to download thumbnail for doc %s: %s", doc.getId(),response));
             }
         } catch (IOException | ApiException e) {
             throw new NuxeoException("Failed to download", e);

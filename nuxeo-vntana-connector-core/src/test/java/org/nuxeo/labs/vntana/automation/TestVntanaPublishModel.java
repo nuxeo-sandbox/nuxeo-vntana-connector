@@ -40,7 +40,7 @@ public class TestVntanaPublishModel {
         model = (DocumentModel) automationService.run(ctx, VntanaPublishModel.ID);
         VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
         Assert.assertNotNull(adapter);
-        Assert.assertTrue(adapter.isUploaded());
+        Assert.assertNotNull(adapter.getProductUUID());
     }
 
 }

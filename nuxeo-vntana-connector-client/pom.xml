@@ -16,7 +16,7 @@
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>5.4.0</version>
+                <version>6.3.0</version>
                 <executions>
                     <execution>
                         <id>default</id>
@@ -27,13 +27,14 @@
                         <configuration>
                             <inputSpec>${project.basedir}/src/main/resources/vntana_1_2.json</inputSpec>
                             <generatorName>java</generatorName>
-                            <skipValidateSpec>true</skipValidateSpec>
+                            <skipValidateSpec>false</skipValidateSpec>
                             <output>${project.build.directory}/generated-sources/vntana-client-src</output>
                             <apiPackage>org.nuxeo.labs.vntana.client.api</apiPackage>
                             <modelPackage>org.nuxeo.labs.vntana.client.model</modelPackage>
                             <invokerPackage>org.nuxeo.labs.vntana.client</invokerPackage>
                             <configOptions>
                                 <dateLibrary>java8</dateLibrary>
+                                <disallowAdditionalPropertiesIfNotPresent>false</disallowAdditionalPropertiesIfNotPresent>
                             </configOptions>
                         </configuration>
                     </execution>

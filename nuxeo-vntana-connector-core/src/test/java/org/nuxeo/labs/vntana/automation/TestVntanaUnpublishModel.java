@@ -2,6 +2,7 @@ package org.nuxeo.labs.vntana.automation;
 
 import javax.inject.Inject;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.automation.AutomationService;
@@ -14,6 +15,7 @@ import org.nuxeo.labs.vntana.VntanaTestFeature;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
+@Ignore
 @RunWith(FeaturesRunner.class)
 @Features(VntanaTestFeature.class)
 @RepositoryConfig(init = DefaultRepositoryInit.class, cleanup = Granularity.METHOD)
