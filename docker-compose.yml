@@ -19,7 +19,7 @@ services:
     volumes:
       - "search_data:/usr/share/opensearch/data"
   nuxeo:
-    image: nuxeo-vntana:2023.0.0-SNAPSHOT
+    image: nuxeo-vntana:2023.1.0-SNAPSHOT
     ports:
       - "8080:8080"
       - "8787:8787"
