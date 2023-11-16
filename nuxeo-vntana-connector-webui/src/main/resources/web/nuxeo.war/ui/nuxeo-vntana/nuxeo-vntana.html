@@ -72,7 +72,7 @@ limitations under the License.
 <nuxeo-slot-content name="VntanaViewerTab" slot="DOCUMENT_VIEWS_ITEMS" order="120">
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" user="[[user]]"
-                      expression="Nuxeo.UI.config.vntana.enabled === 'true' && document.properties['vntana:status'] === 'LIVE'">
+                      expression="Nuxeo.UI.config.vntana.enabled === 'true' && document.properties['vntana:status'] === 'LIVE_PUBLIC'">
             <template>
                 <nuxeo-page-item name="vntanaviewertab" label="label.vntana.embedded"></nuxeo-page-item>
             </template>
@@ -83,7 +83,7 @@ limitations under the License.
 <nuxeo-slot-content name="VntanaViewerTab" slot="DOCUMENT_VIEWS_PAGES">
     <template>
         <nuxeo-filter document="[[document]]" facet="Vntana" user="[[user]]"
-                      expression="Nuxeo.UI.config.vntana.enabled === 'true' && document.properties['vntana:status'] === 'LIVE'">
+                      expression="Nuxeo.UI.config.vntana.enabled === 'true' && document.properties['vntana:status'] === 'LIVE_PUBLIC'">
             <template>
                 <nuxeo-vntana-embedded-viewer-tab document="[[document]]" name="vntanaviewertab"></nuxeo-vntana-embedded-viewer-tab>
             </template>
