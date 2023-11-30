@@ -1,8 +1,6 @@
 package org.nuxeo.labs.vntana.service;
 
 import static org.nuxeo.labs.vntana.adapter.VntanaAdapter.VNTANA_FACET;
-import static org.nuxeo.labs.vntana.client.model.ProductGetResponseModel.ConversionStatusEnum.PENDING;
-import static org.nuxeo.labs.vntana.client.model.ProductGetResponseModel.StatusEnum.DRAFT;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,8 +100,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
                 result = client;
                 if (result == null) {
                     result = client = new ApiClient();
-                    client.getJSON()
-                          .setOffsetDateTimeFormat(
+                    org.nuxeo.labs.vntana.client.JSON.setOffsetDateTimeFormat(
                                   new DateTimeFormatterBuilder().appendPattern("uuuu-MM-dd'T'HH:mm:ss")
                                                                 .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true)
                                                                 .toFormatter()
@@ -255,6 +252,7 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         productCreateRequest.setPipelineUuid(pipelineUUID);
         productCreateRequest.setModelOpsParameters(parameters.toMap());
         productCreateRequest.setAttributes(attributes);
+        productCreateRequest.setStatus(AdminCommonProductCreateRequest.StatusEnum.LIVE_INTERNAL);
         productCreateRequest.setPublishToStatus(AdminCommonProductCreateRequest.PublishToStatusEnum.LIVE_INTERNAL);
 
         try {
@@ -359,7 +357,8 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         try {
             Blob blob = vntanaAdapter.getOriginalBlob();
             if (upload(vntanaAdapter, blob)) {
-                vntanaAdapter.setSourceDigest(blob.getDigest()).setUploadSuccessful().setStatus(DRAFT.getValue()).setConversionStatus(PENDING.getValue());
+                vntanaAdapter.setSourceDigest(blob.getDigest()).setUploadSuccessful();
+                updateModelRemoteProcessingStatus(vntanaAdapter);
             } else {
                 vntanaAdapter.setUploadFailed();
             }

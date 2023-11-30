@@ -2,8 +2,7 @@ package org.nuxeo.labs.vntana.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.nuxeo.labs.vntana.adapter.VntanaAdapter.VNTANA_FACET;
-import static org.nuxeo.labs.vntana.client.model.AdminCommonProductCreateRequest.PublishToStatusEnum.LIVE_INTERNAL;
-import static org.nuxeo.labs.vntana.client.model.ProductGetResponseModel.StatusEnum.DRAFT;
+import static org.nuxeo.labs.vntana.client.model.ProductGetResponseModel.StatusEnum.LIVE_INTERNAL;
 
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +97,7 @@ public class TestVntanaService {
         DocumentModel model = vntanaTestFeature.getTestDocument(session);
         vntanaservice.publishModel(model);
         VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
-        Assert.assertEquals(DRAFT.getValue(), adapter.getStatus());
+        Assert.assertEquals(LIVE_INTERNAL.getValue(), adapter.getStatus());
         Assert.assertNotNull(adapter);
         Assert.assertTrue(adapter.isUploaded());
     }

@@ -1756,8 +1756,12 @@
               "type": "string"
             }
           },
-          "autoPublish": {
-            "type": "boolean"
+          "status": {
+            "type": "string",
+            "enum": [
+              "DRAFT",
+              "LIVE_INTERNAL"
+            ]
           },
           "publishToStatus": {
             "type": "string",
