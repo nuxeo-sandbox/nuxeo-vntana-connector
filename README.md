@@ -66,7 +66,6 @@ Parameters:
 
 | Name             | Description                                    | Type    | Required | Default value |
 |:-----------------|:-----------------------------------------------|:--------|:---------|:--------------|
-| autoPublish      | Automatically make the model embeddable        | boolean | false    | false         |
 | organizationUUID | The Vntana destination organization            | string  | false    |               |
 | clientUUID       | The client destination within the organization | string  | false    |               |
 | save             | Save the document                              | boolean | false    | false         |

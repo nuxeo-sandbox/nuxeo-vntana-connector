@@ -137,6 +137,7 @@ public class VntanaAdapter implements VntanaProductReference {
 
     public VntanaAdapter setUploadSuccessful() {
         setUploadStatus(UploadStatusEnum.SUCCESS.value);
+        setConversionStatus("PENDING");
         return this;
     }
 

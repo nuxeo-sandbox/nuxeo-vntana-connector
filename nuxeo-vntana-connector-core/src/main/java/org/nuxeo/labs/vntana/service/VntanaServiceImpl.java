@@ -328,12 +328,11 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         return publishModel(doc,
                 Framework.getProperty(VNTANA_DEFAULT_ORGANIZATION_UUID),
                 Framework.getProperty(VNTANA_DEFAULT_CLIENT_UUID),
-                Boolean.getBoolean(Framework.getProperty(VNTANA_DEFAULT_PUBLISH_LIVE,"false")),
                 getDefaultModelOpsParameters());
     }
 
     @Override
-    public DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID, boolean autoLive, ModelOpsParameters parameters) {
+    public DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID, ModelOpsParameters parameters) {
         if (!doc.hasFacet(VNTANA_FACET)) {
             doc.addFacet(VNTANA_FACET);
         }
@@ -354,11 +353,15 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
                      .setClientUUID(clientUUID)
                      .setClientSlug(client.getClientSlug())
                      .setProductUUID(productId);
+
+        // Get product
+        ProductGetResponseModel emptyProduct = getProduct(vntanaAdapter);
+        vntanaAdapter.setStatus(emptyProduct.getStatus().toString());
+
         try {
             Blob blob = vntanaAdapter.getOriginalBlob();
             if (upload(vntanaAdapter, blob)) {
                 vntanaAdapter.setSourceDigest(blob.getDigest()).setUploadSuccessful();
-                updateModelRemoteProcessingStatus(vntanaAdapter);
             } else {
                 vntanaAdapter.setUploadFailed();
             }

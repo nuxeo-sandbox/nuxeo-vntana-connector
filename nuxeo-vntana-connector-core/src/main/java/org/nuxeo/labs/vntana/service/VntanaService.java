@@ -72,7 +72,7 @@ public interface VntanaService {
      * @param clientUUID
      * @return
      */
-    DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID, boolean autoLive, ModelOpsParameters parameters);
+    DocumentModel publishModel(DocumentModel doc, String organizationUUID, String clientUUID, ModelOpsParameters parameters);
 
     DocumentModel updateModelRemoteProcessingStatus(DocumentModel doc);
 
