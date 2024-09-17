@@ -84,4 +84,6 @@ public interface VntanaService {
 
     Blob thumbnail(DocumentModel doc);
 
+    String getAccessToken(DocumentModel doc);
+
 }

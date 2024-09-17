@@ -143,4 +143,11 @@ public class TestVntanaService {
         Assert.assertTrue(blob.getLength() > 0);
     }
 
+    @Test
+    public void testGetAccessToken() {
+        DocumentModel model = vntanaTestFeature.getDefaultProductAsDocument(session);
+        String token = vntanaservice.getAccessToken(model);
+        Assert.assertNotNull(token);
+    }
+
 }

@@ -452,6 +452,12 @@ public class VntanaServiceImpl extends DefaultComponent implements VntanaService
         }
     }
 
+    @Override
+    public String getAccessToken(DocumentModel doc) {
+        VntanaAdapter adapter = getAdapter(doc);
+        return getOrganizationToken(adapter.getOrganizationUUID());
+    }
+
     protected String getApiToken() {
         String apiKey = Framework.getProperty(VNTANA_API_TOKEN);
         if (StringUtils.isBlank(apiKey)) {
