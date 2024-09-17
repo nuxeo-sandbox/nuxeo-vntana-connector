@@ -1,5 +1,3 @@
-<link rel="import" href="../../nuxeo-glb-preview/widgets/nuxeo-glb-viewer.html">
-
 <!--
 `nuxeo-glb-view-layout`
 @group Nuxeo UI
@@ -18,9 +16,10 @@
                 @apply --paper-card;
             }
 
-            nuxeo-glb-viewer {
+            iframe {
                 width: 100%;
                 height: calc(75vh - 100px);
+                border: none;
             }
         </style>
 
@@ -71,8 +70,7 @@
             },
 
             _isVntanaEnabled: function () {
-                //return Nuxeo.UI.config.vntana && Nuxeo.UI.config.vntana.enabled === 'true';
-                return false;
+                return Nuxeo.UI.config.vntana && Nuxeo.UI.config.vntana.enabled === 'true' && this.document?.properties["vntana:conversion_status"] === "COMPLETED";
             },
 
             _getFrameUrl: function (document) {

@@ -1,0 +1,73 @@
+vntana-viewer::backdrop {
+  background-color: white;
+}
+
+vntana-center-button {
+  position: absolute;
+  top: 19px;
+  right: 19px;
+  z-index: 1;
+}
+
+vntana-fs-button {
+  position: absolute;
+  right: 19px;
+  bottom: 25px;
+  z-index: 2;
+}
+
+.zoom-buttons {
+  position: absolute;
+  right: 19px;
+  bottom: 85px;
+  z-index: 3;
+
+  flex-direction: column;
+}
+
+vntana-qr-button, vntana-ar-button {
+  position: absolute;
+  top: 19px;
+  left: 19px;
+  z-index: 4;
+}
+
+.button-container {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1px;
+
+  box-sizing: border-box;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15);
+
+  border-radius: 5px;
+  background-color:  #CDCDCD;
+  overflow: hidden;
+}
+
+.button-container * {
+  flex: 0 1 auto;
+  position: static;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* NOTE: fixed max-width *must* be defined on the element for transition to work */
+
+.expandable {
+  transition: max-width 0.3s linear;
+}
+
+.expandable:not(:hover) {
+  max-width: var(--computed-button-size);
+}
+
+.expandable:not(:hover)::part(default-text) {
+  opacity: 0;
+  transition: opacity 0.3s linear;
+}
+
+.expandable:hover::part(default-text) {
+  opacity: 1;
+}

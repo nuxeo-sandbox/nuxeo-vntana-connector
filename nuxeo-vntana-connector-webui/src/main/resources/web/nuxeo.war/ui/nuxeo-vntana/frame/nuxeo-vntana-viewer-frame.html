@@ -1,73 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Vntana Viewer</title>
-    <script src="https://static.vntana.com/js/vnview.min.js?version=2.0"></script>
+    <link rel="icon" href="data:;base64,iVBORwOKGO="/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" href="./viewer.css"/>
+    <link rel="stylesheet" href="./style.css"/>
 </head>
 
-<style>
-    html, body {
-        margin: 0px;
-        height: 100%;
-    }
-
-    #viewer {
-        width: 100%;
-        height: 100%;
-    }
-
-    model-viewer {
-        width: 100%;
-        height: 100%;
-        background-color: white;
-    }
-
-    #enterFullscreen {
-        position: absolute;
-        right: 16px;
-        bottom: 16px;
-        width: 40px;
-        height: 40px;
-        background: white url('https://storage.googleapis.com/vntana-viewer/assets/images/enter_fullscreen_icon.svg') no-repeat center;
-        background-size: 25px auto;
-        cursor: pointer;
-    }
-
-    #exitFullscreen {
-        position: absolute;
-        right: 16px;
-        bottom: 16px;
-        width: 40px;
-        height: 40px;
-        background: white url('https://storage.googleapis.com/vntana-viewer/assets/images/exit_fullscreen_icon.svg') no-repeat center;
-        background-size: 25px auto;
-        display: none;
-        cursor: pointer;
-    }
-
-</style>
-
 <body>
-<div id="viewer"></div>
+<script type="module" src="https://viewer-build.vntana.com/v1.1.0/viewer.min.js"></script>
+
+<vntana-viewer id="viewer" tone-mapping="neutral">
+    <vntana-fs-button></vntana-fs-button>
+</vntana-viewer>
 </body>
 
 
 <script>
     window.addEventListener("load", function () {
+
         const params = new URLSearchParams(window.location.search);
 
         let blobUrl = params.get('blobUrl');
-        let thumbnailUrl = params.get('thumbnailUrl');
 
         let viewerEl = document.querySelector('#viewer');
 
-        let viewer = vnview.createvnviewer(viewerEl, {
-            thumbnailUrl: thumbnailUrl,
-            disablePoster: false
-        });
+        viewerEl.src= blobUrl;
 
-        viewer.loadObject(blobUrl);
     });
 </script>
 
