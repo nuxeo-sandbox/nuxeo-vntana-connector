@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.labs.vntana.template" version="1.0.0">
+
+    <require>org.nuxeo.ecm.core.CoreExtensions</require>
+    <require>org.nuxeo.labs.vntana.service.VntanaService</require>
+
+    <extension target="org.nuxeo.ecm.core.schema.TypeService" point="doctype">
+        <doctype name="GLB" extends="File"/>
+        <doctype name="Folder" append="true">
+            <subtypes>
+                <type>GLB</type>
+            </subtypes>
+        </doctype>
+        <doctype name="Workspace" append="true">
+            <subtypes>
+                <type>GLB</type>
+            </subtypes>
+        </doctype>
+    </extension>
+
+    <extension target="org.nuxeo.ecm.core.lifecycle.LifeCycleService" point="types">
+        <types>
+            <type name="GLB">default</type>
+        </types>
+
+    </extension>
+    <extension target="org.nuxeo.ecm.platform.types.TypeService" point="types">
+        <type id="GLB">
+            <label>GLB</label>
+            <icon>/img/3d.png</icon>
+            <bigIcon>/img/3d.png</bigIcon>
+        </type>
+    </extension>
+
+    <extension target="org.nuxeo.ecm.platform.actions.ActionService" point="filters">
+        <filter id="create" append="true">
+            <rule grant="false">
+                <type>GLB</type>
+            </rule>
+        </filter>
+    </extension>
+
+    <extension point="filters" target="org.nuxeo.ecm.platform.actions.ActionService">
+        <filter id="vntanaDocumentFilter">
+            <rule grant="true">
+                <type>GLB</type>
+            </rule>
+        </filter>
+    </extension>
+
+</component>

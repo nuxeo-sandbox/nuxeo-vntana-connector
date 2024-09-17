@@ -1,0 +1,31 @@
+<!--
+`nuxeo-glb-import-layout`
+@group Nuxeo UI
+@element nuxeo-glb-import-layout
+-->
+<dom-module id="nuxeo-glb-import-layout">
+  <template>
+    <style include="nuxeo-styles"></style>
+    <nuxeo-input role="widget" value="{{document.properties.dc:title}}" label="Title" type="text" required="true" name="title"></nuxeo-input>
+
+    <nuxeo-input role="widget" value="{{document.properties.dc:description}}" label="Description" type="text" name="description"></nuxeo-input>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'nuxeo-glb-import-layout',
+      behaviors: [Nuxeo.LayoutBehavior],
+      properties: {
+
+        /**
+         * @doctype GLB
+         */
+        document: {
+          type: Object,
+        },
+
+      }
+    });
+  </script>
+</dom-module>

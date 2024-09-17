@@ -1,0 +1,84 @@
+<link rel="import" href="../../nuxeo-glb-preview/widgets/nuxeo-glb-viewer.html">
+
+<!--
+`nuxeo-glb-view-layout`
+@group Nuxeo UI
+@element nuxeo-glb-view-layout
+-->
+<dom-module id="nuxeo-glb-view-layout">
+    <template>
+        <style include="nuxeo-styles">
+            .container {
+                @apply --paper-card;
+                padding: 0;
+                margin-bottom: 0;
+            }
+
+            nuxeo-document-blob {
+                @apply --paper-card;
+            }
+
+            nuxeo-glb-viewer {
+                width: 100%;
+                height: calc(75vh - 100px);
+            }
+        </style>
+
+        <div class="container">
+            <template is="dom-if" if="[[_isVntanaEnabled()]]">
+                <iframe src="[[_getFrameUrl(document)]]" allowfullscreen mozallowfullscreen="true"
+                        webkitallowfullscreen="true" onmousewheel=""></iframe>
+            </template>
+        </div>
+
+        <nuxeo-document-blob document="[[document]]"></nuxeo-document-blob>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'nuxeo-glb-view-layout',
+            behaviors: [Nuxeo.LayoutBehavior],
+            properties: {
+
+                /**
+                 * @doctype GLB
+                 */
+                document: {
+                    type: Object,
+                }
+
+            },
+
+            _getSource: function(document) {
+                if (!document) {
+                    return null;
+                }
+
+                if (document.properties && document.properties['glb:renditions'] && document.properties['glb:renditions'].length > 0) {
+                    return document.properties['glb:renditions'][0].content.data;
+                } else {
+                    return document.properties['file:content'].data;
+                }
+            },
+
+            _getThumbnail: function(document) {
+                if (document && document.properties['thumb:thumbnail'] && document.properties['thumb:thumbnail'].data) {
+                    return document.properties['thumb:thumbnail'].data;
+                } else {
+                    return document.contextParameters.thumbnail.url;
+                }
+            },
+
+            _isVntanaEnabled: function () {
+                //return Nuxeo.UI.config.vntana && Nuxeo.UI.config.vntana.enabled === 'true';
+                return false;
+            },
+
+            _getFrameUrl: function (document) {
+                return `/nuxeo/ui/nuxeo-vntana/frame/nuxeo-vntana-viewer-frame.html?blobUrl=${encodeURIComponent(this._getSource(document))}&thumbnailUrl=${this._getThumbnail(document)}`;
+            }
+
+        });
+    </script>
+</dom-module>
