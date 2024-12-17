@@ -1,6 +1,6 @@
 package org.nuxeo.labs.vntana.automation;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import org.junit.Ignore;
 import org.junit.Test;
