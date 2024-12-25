@@ -19,6 +19,7 @@
 
 package org.nuxeo.labs.vntana;
 
+import org.apache.commons.lang3.StringUtils;
 import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.test.AutomationFeature;
 import org.nuxeo.ecm.core.api.Blob;
@@ -103,6 +104,10 @@ public class VntanaTestFeature implements RunnerFeature {
 
     public String getDefaultProduct() {
         return System.getProperty("vntanaProductUUID");
+    }
+
+    public boolean isReady() {
+        return StringUtils.isNotBlank(Framework.getProperty(VNTANA_API_TOKEN));
     }
 
 }

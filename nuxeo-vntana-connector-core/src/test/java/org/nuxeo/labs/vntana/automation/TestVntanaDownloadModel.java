@@ -3,6 +3,7 @@ package org.nuxeo.labs.vntana.automation;
 import jakarta.inject.Inject;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.automation.AutomationService;
@@ -34,6 +35,7 @@ public class TestVntanaDownloadModel {
 
     @Test
     public void shouldCallTheOperation() throws OperationException {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         DocumentModel model = vntanaTestFeature.getDefaultProductAsDocument(session);
         OperationContext ctx = new OperationContext(session);
         ctx.setInput(model);

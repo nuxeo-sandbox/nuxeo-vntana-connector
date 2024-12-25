@@ -10,6 +10,7 @@ import java.util.List;
 import jakarta.inject.Inject;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,18 +57,21 @@ public class TestVntanaService {
 
     @Test
     public void testGetOrganizations() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         List<GetUserOrganizationsResponseModel> organizations = vntanaservice.getOrganizations();
         Assert.assertNotNull(organizations);
     }
 
     @Test
     public void testGetOrganization() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         GetOrganizationByUuidResponseModel organization = vntanaservice.getOrganization(vntanaTestFeature.getDefaultOrg());
         Assert.assertEquals(vntanaTestFeature.getDefaultOrg(),organization.getUuid());
     }
 
     @Test
     public void testGetClients() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         List<GetUserClientOrganizationsResponseModel> clients = vntanaservice.getClients(
                 vntanaTestFeature.getDefaultOrg());
         Assert.assertNotNull(clients);
@@ -75,6 +79,7 @@ public class TestVntanaService {
 
     @Test
     public void testGetClient() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         GetClientOrganizationResponseModel client = vntanaservice.getClient(
                 vntanaTestFeature.getDefaultOrg(), vntanaTestFeature.getDefaultClient());
         Assert.assertEquals(vntanaTestFeature.getDefaultClient(),client.getClientUuid());
@@ -82,6 +87,7 @@ public class TestVntanaService {
 
     @Test
     public void testGetProduct() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         ProductGetResponseModel product = vntanaservice.getProduct(vntanaTestFeature.getDefaultProductAsRef());
         Assert.assertNotNull(product);
     }
@@ -94,6 +100,7 @@ public class TestVntanaService {
 
     @Test
     public void testPublishModel() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         DocumentModel model = vntanaTestFeature.getTestDocument(session);
         vntanaservice.publishModel(model);
         VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
@@ -103,28 +110,8 @@ public class TestVntanaService {
     }
 
     @Test
-    @Ignore
-    public void testUnpublishModel() {
-        String pipelineUUID = vntanaservice.getPipelineUUID(vntanaTestFeature.getDefaultOrg(), "Convert Only");
-        String productUUID = vntanaservice.createProduct(
-                "TestDelete", vntanaTestFeature.getDefaultOrg(),
-                vntanaTestFeature.getDefaultClient(), pipelineUUID,
-                new ModelOpsParameters(), new HashMap<>()
-        ).getUuid();
-
-        DocumentModel model = vntanaTestFeature.getTestDocument(session);
-        model.addFacet(VNTANA_FACET);
-        VntanaAdapter adapter = model.getAdapter(VntanaAdapter.class);
-        adapter.setOrganizationUUID(vntanaTestFeature.getDefaultOrg())
-               .setClientUUID(vntanaTestFeature.getDefaultClient())
-               .setProductUUID(productUUID);
-
-        model = vntanaservice.unpublishModel(model);
-        Assert.assertFalse(model.hasFacet(VNTANA_FACET));
-    }
-
-    @Test
     public void testDownloadModel() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         DocumentModel model = vntanaTestFeature.getDefaultProductAsDocument(session);
         Blob blob = vntanaservice.download(model, Model.ConversionFormatEnum.GLB);
         Assert.assertNotNull(blob);
@@ -135,6 +122,7 @@ public class TestVntanaService {
 
     @Test
     public void testDownloadModelThumbnail() {
+        Assume.assumeTrue(vntanaTestFeature.isReady());
         DocumentModel model = vntanaTestFeature.getDefaultProductAsDocument(session);
         Blob blob = vntanaservice.thumbnail(model);
         Assert.assertNotNull(blob);
