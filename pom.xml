@@ -7,7 +7,7 @@
   </parent>
   <groupId>org.nuxeo.labs.vntana</groupId>
   <artifactId>nuxeo-vntana-connector-parent</artifactId>
-  <version>2025.1.0-SNAPSHOT</version>
+  <version>2025.1.0</version>
   <name>Nuxeo vntana connector parent</name>
   <description>A connector between Vntana and the Nuxeo Platform</description>
   <packaging>pom</packaging>
@@ -81,8 +81,7 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <updatePolicy>always</updatePolicy>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
     </repository>
     <repository>
@@ -92,8 +91,7 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <updatePolicy>always</updatePolicy>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
     </repository>
     <repository>
@@ -103,8 +101,7 @@
         <enabled>true</enabled>
       </releases>
       <snapshots>
-        <updatePolicy>always</updatePolicy>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </snapshots>
     </repository>
   </repositories>
